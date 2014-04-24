@@ -7,6 +7,13 @@
     "start": "node ./bin/www"
   },
 
+  "devDependencies": {
+    "sinon-chai": "2.5.0",
+    "chai":       "1.9.1",
+    "mocha":      "1.18.2",
+    "sinon":      "1.9.1"
+  },
+
   "dependencies": {
     "express":        "4.0.0",
 
