@@ -3,7 +3,7 @@ var OauthAccessToken = function(sequelize, DataTypes){
     id: { type: DataTypes.UUID, unique: true, primaryKey: true },
     accessToken: { type: DataTypes.TEXT, unique: true, allowNull: false },
     clientId: { type: DataTypes.TEXT, allowNull: false },
-    userId: { type: DataTypes.STRING, allowNull: false },
+    userId: { type: DataTypes.UUID, allowNull: false },
     expires: { type: DataTypes.DATE, allowNull: false }
   });
 
