@@ -4,12 +4,16 @@ var Sequelize= require('sequelize'),
       port: 5432,
       dialect: 'postgres'
     }),
-    DB = {
+    db = {
       Sequelize: Sequelize,
       sequelize: sequelize
     };
 
 // Require models
-DB['User'] = DB.sequelize.import('./user');
+db['User'] = db.sequelize.import('./user');
+db['OauthClient'] = db.sequelize.import('./oauth_client');
+db['OauthAccessToken'] = db.sequelize.import('./oauth_access_token');
+db['OauthRefreshToken'] = db.sequelize.import('./oauth_refresh_token');
 
-module.exports = DB;
+module.exports = db;
+

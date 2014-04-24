@@ -10,4 +10,4 @@ var OauthAccessToken = function(sequelize, DataTypes){
   return OauthAccessTokenModel;
 };
 
-module.exports = User;
+module.exports = OauthAccessToken;

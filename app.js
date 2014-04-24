@@ -9,7 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-var DB = require('./models/db');
+var db = require('./models/db');
 
 // Connect to DB and setup models
 
@@ -29,7 +29,7 @@ app.use('/', routes);
 app.use('/users', users);
 
 // Setup and Sync DataBase and load models
-DB.sequelize
+db.sequelize
   .sync()
   .complete(function(){
     console.log('DB Synced Successfully');
