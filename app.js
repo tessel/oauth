@@ -14,9 +14,15 @@ var routes = require('./routes/index'),
 
 var db = require('./models/db');
 
-var app = express();
+var app = express(),
+    oauthserver = require('node-oauth2-server');
 
-// Connect to DB and setup models
+// Configure OAuth2 server
+var oauth = oauthserver({
+    model: require('./oauth2/model'),
+    grants: ['password'],
+    debug: true
+  });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
