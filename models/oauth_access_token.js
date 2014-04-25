@@ -1,9 +1,9 @@
 var OauthAccessToken = function(sequelize, DataTypes){
   var OauthAccessTokenModel = sequelize.define('OauthAccessToken', {
-    id: { type: DataTypes.UUID, primaryKey: true },
+    id: { type: DataTypes.INTEGER, unique: true, autoIncrement: true, primaryKey: true },
     accessToken: { type: DataTypes.TEXT, unique: true, allowNull: false },
-    clientId: { type: DataTypes.UUID, allowNull: false },
-    userId: { type: DataTypes.UUID, allowNull: false },
+    clientId: { type: DataTypes.STRING, allowNull: false },
+    userId: { type: DataTypes.INTEGER, allowNull: false },
     expires: { type: DataTypes.DATE, allowNull: false }
   });
 

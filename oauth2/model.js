@@ -27,10 +27,7 @@ model.getClient = function(clientId, clientSecret, callback) {
     .find({ where: { clientId: clientId, clientSecret: clientSecret } })
     .success(function(client){
       if (client){
-        callback(null, {
-          clientId: client.client_id,
-          clientSecret: client.client_secret
-        });
+        callback(null, client);
       }else{
         callback(null, false);
       }
@@ -60,14 +57,13 @@ model.grantTypeAllowed = function(clientId, grantType, callback) {
     });
 };
 
-model.saveAccessToken = function(accessToken, clientId, expires, userId, callback) {
+model.saveAccessToken = function(accessToken, clientId, expires, user, callback) {
   var newToken = db.OauthAccessToken.build({
-    accesToken: accessToken,
+    accessToken: accessToken,
     clientId: clientId,
-    expires: expires,
-    userId: userId
+    userId: user.id,
+    expires: expires
   });
-
   newToken
     .save()
     .success(function(persistedToken){
@@ -161,10 +157,7 @@ model.getUser = function(username, password, callback) {
     .find({ where: { username: username, password: password } })
     .success(function(user){
       if (user){
-        callback(null, {
-          id: user.id,
-          username: user.username
-        });
+        callback(null, user);
       }else{
         callback(null, false);
       }

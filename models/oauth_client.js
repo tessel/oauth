@@ -1,7 +1,6 @@
 var OauthClient = function(sequelize, DataTypes){
   var OauthAccessTokenModel = sequelize.define('OauthClient', {
-    id: { type: DataTypes.UUID, unique: true, primaryKey: true },
-    clientId: { type: DataTypes.TEXT, unique:true, allowNull: false },
+    clientId: { type: DataTypes.STRING, unique:true, allowNull: false, primaryKey: true },
     clientSecret: { type: DataTypes.TEXT, allowNull: false },
     redirectURI: { type: DataTypes.TEXT },
     grantTypeAllowed: { type: DataTypes.STRING, allowNull: false }
