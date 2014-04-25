@@ -35,13 +35,16 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+// Use OAuth2 handler and error handler
+app.use(oauth.handler());
+app.use(oauth.errorHandler());
 
 app.use('/', routes);
 app.use('/users', users);
 
 // Setup and Sync Database and load models
 db.sequelize
-  .sync()
+  .sync({ force: true })
   .complete(function(err){
     if (err) {
       console.log(err);
