@@ -1,4 +1,4 @@
-require('../support');
+'use strict';
 
 var app = source("app");
 
