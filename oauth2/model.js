@@ -75,7 +75,7 @@ model.getAuthCode = function(authCode, callback) {
     .find({ where: { authCode: authCode } })
     .success(function(code){
       if (code){
-        callback(null, authCode);
+        callback(null, code);
       }else{
         callback(null, false);
       }
@@ -98,7 +98,7 @@ model.saveAuthCode = function(authCode, clientId, expires, userId, callback){
     .success(function(persistedCode){
       callback(false);
     })
-    .err(function(err){
+    .error(function(err){
       callback(err);
     });
 };
