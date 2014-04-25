@@ -47,8 +47,8 @@ app.use('/users', routes.users);
 
 // Setup and Sync Database and load models
 db.sequelize
-  //.sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  //.sync()
   .complete(function(err){
     if (!!err) {
       console.log(err);
