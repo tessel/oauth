@@ -1,7 +1,7 @@
 BIN := ./node_modules/.bin
 TEST_FILES := test/support.js $(shell find test/specs -type f -name "*.js")
 
-.PHONY: run test bdd
+.PHONY: serve test bdd
 
 test:
 	@$(BIN)/mocha --colors $(TEST_FILES)
@@ -9,6 +9,5 @@ test:
 bdd:
 	@$(BIN)/mocha --colors -R spec $(TEST_FILES)
 
-run:
+serve:
 	./bin/www
-
