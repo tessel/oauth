@@ -10,7 +10,8 @@ var express = require('express'),
     bodyParser = require('body-parser');
 
 var routes = require('./routes/index'),
-    users = require('./routes/users');
+    users = require('./routes/users'),
+    oauthRoutes = require('./routes/oauth2');
 
 var db = require('./models/db');
 
@@ -20,7 +21,7 @@ var app = express(),
 // Configure OAuth2 server
 app.oauth = oauthserver({
   model: require('./oauth2/model'),
-  grants: ['password'],
+  grants: ['password', 'authorization_code'],
   debug: true
 });
 
@@ -36,17 +37,11 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-// Use OAuth2 error handler
-app.use(app.oauth.errorHandler());
 
-// Use OAuth to grant/deny access
-app.all('/oauth/token', app.oauth.grant());
-app.get('/', app.oauth.authorise(), function (req, res) {
-  res.send('Secret area');
-});
-
-//app.use('/', routes);
-//app.use('/users', users);
+// Use OAuth to grant tokens
+app.use('/oauth', oauthRoutes.all(app));
+app.use('/', routes);
+app.use('/users', users);
 
 // Setup and Sync Database and load models
 db.sequelize
@@ -70,6 +65,9 @@ app.use(function(req, res, next) {
 
 /// error handlers
 
+// Use OAuth2 error handler
+app.use(app.oauth.errorHandler());
+
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
@@ -91,6 +89,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;

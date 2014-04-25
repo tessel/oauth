@@ -7,12 +7,7 @@ model.getAccessToken = function(accessToken, callback) {
     .find({ where: { accessToken: accessToken } })
     .success(function(token){
       if (token) {
-        callback(null, {
-          accessToken: token.accessToken,
-          clientId: token.clientId,
-          expires: token.expires,
-          userId: token.userId
-        });
+        callback(null, token);
       }else{
         callback(null, false)
       }
@@ -80,12 +75,7 @@ model.getAuthCode = function(authCode, callback) {
     .find({ where: { authCode: authCode } })
     .success(function(code){
       if (code){
-        callback(null, {
-          authCode: code.authCode,
-          clientId: code.clientId,
-          userId: code.userId,
-          expires: code.expires
-        });
+        callback(null, authCode);
       }else{
         callback(null, false);
       }
@@ -119,11 +109,7 @@ model.getRefreshToken = function(refreshToken, callback) {
     .find({ where: { refreshToken: refreshToken } })
     .success(function(token){
       if (token){
-        callback(null, {
-          clientId:     token.clientId,
-          refreshToken: token.refreshToken,
-          expires:      token.expires
-        });
+        callback(null, refreshToken);
       }else{
         callback(null, false);
       }
