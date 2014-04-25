@@ -28,10 +28,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 
-// Setup and Sync DataBase and load models
+// Setup and Sync Database and load models
 db.sequelize
   .sync()
-  .complete(function(){
+  .complete(function(err){
+    if (err) {
+      console.log(err);
+      process.exit();
+    }
+
     console.log('DB Synced Successfully');
   });
 
