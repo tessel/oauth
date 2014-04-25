@@ -1,5 +1,5 @@
 var db = require('../models/db'),
-    model;
+    model = {};
 
 // Functions always required by node-oauth2-server
 model.getAccessToken = function(accessToken, callback) {

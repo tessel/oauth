@@ -1,5 +1,5 @@
 var OauthAuthCode = function(sequelize, DataTypes){
-  var OauthRefreshTokenModel = sequelize.define('OauthRefreshToken', {
+  var OauthAuthCode = sequelize.define('OauthRefreshToken', {
     id: { type: DataTypes.UUID, primaryKey: true },
     authCode: { type: DataTypes.TEXT, unique: true, allowNull: false },
     clientId: { type: DataTypes.UUID, allowNull: false },
@@ -7,7 +7,7 @@ var OauthAuthCode = function(sequelize, DataTypes){
     expires: { type: DataTypes.DATE, allowNull: false }
   });
 
-  return OauthRefreshTokenModel;
+  return OauthAuthCode;
 };
 
-module.exports = OauthRefreshToken;
+module.exports = OauthAuthCode;

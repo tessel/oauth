@@ -18,11 +18,12 @@ var app = express(),
     oauthserver = require('node-oauth2-server');
 
 // Configure OAuth2 server
-var oauth = oauthserver({
-    model: require('./oauth2/model'),
-    grants: ['password'],
-    debug: true
-  });
+app.oauth = oauthserver({
+  model: require('./oauth2/model'),
+  grants: ['password'],
+  debug: true
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,9 +36,14 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-// Use OAuth2 handler and error handler
-app.use(oauth.handler());
-app.use(oauth.errorHandler());
+// Use OAuth2 error handler
+app.use(app.oauth.errorHandler());
+
+// Use OAuth to grant/deny access
+app.all('/oauth/token', app.oauth.grant());
+app.get('/', app.oauth.authorise(), function (req, res) {
+  res.send('Secret area');
+});
 
 app.use('/', routes);
 app.use('/users', users);
