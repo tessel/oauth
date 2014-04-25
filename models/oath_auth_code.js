@@ -1,5 +1,5 @@
 var OauthAuthCode = function(sequelize, DataTypes){
-  var OauthAuthCode = sequelize.define('OauthRefreshToken', {
+  var OauthAuthCode = sequelize.define('OauthAuthToken', {
     id: { type: DataTypes.UUID, primaryKey: true },
     authCode: { type: DataTypes.TEXT, unique: true, allowNull: false },
     clientId: { type: DataTypes.UUID, allowNull: false },
