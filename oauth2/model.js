@@ -99,6 +99,24 @@ model.getAuthCode = function(authCode, callback) {
     });
 };
 
+model.saveAuthCode = function(authCode, clientId, expires, userId, callback){
+  var newCode = db.OauthAuthCode.build({
+    authCode: authCode,
+    clientId: clientId,
+    userId: userId,
+    expires: expires,
+  });
+
+  newCode
+    .save()
+    .success(function(persistedCode){
+      callback(false);
+    })
+    .err(function(err){
+      callback(err);
+    });
+};
+
 // Required by GrantType refresh_token
 model.getRefreshToken = function(refreshToken, callback) {
   db.OauthRefreshToken
@@ -155,7 +173,5 @@ model.getUser = function(username, password, callback) {
       callback(err, false);
     });
 };
-
-
 
 module.exports = model;
