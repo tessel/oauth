@@ -41,8 +41,8 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Use OAuth to grant tokens
-app.use('/oauth', routes.oauth.all(app));
-app.use('/',      routes.index);
+app.use('/oauth', routes.oauth.all(app.oauth));
+app.use('/',      routes.index.all(app.oauth));
 app.use('/users', routes.users);
 
 // Setup and Sync Database and load models

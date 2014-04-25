@@ -1,11 +1,11 @@
 var express = require('express'),
     router = express.Router(),
-    oauth = {};
+    oauthRoutes = {};
 
 /* GET home page. */
-oauth.all = function(app){
-  router.all('/token', app.oauth.grant());
-  router.all('/authCode', app.oauth.authCodeGrant(function(req, next) {
+oauthRoutes.all = function(oauth){
+  router.all('/token', oauth.grant());
+  router.post('/authorise', oauth.authCodeGrant(function(req, next) {
     // The first param should to indicate an error
     // The second param should a bool to indicate if the user did authorise the app
     // The third param should for the user/uid (only used for passing to saveAuthCode)
@@ -13,7 +13,7 @@ oauth.all = function(app){
   }
   ));
 
-  return router
+  return router;
 }
 
-module.exports = oauth;
+module.exports = oauthRoutes;
