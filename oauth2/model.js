@@ -19,12 +19,12 @@ model.getAccessToken = function(accessToken, callback) {
 
 model.getClient = function(clientId, clientSecret, callback) {
   db.OauthClient
-    .find({ where: { clientId: clientId, clientSecret: clientSecret } })
+    .find({ where: { clientId: clientId } })
     .success(function(client){
-      if (client){
-        callback(null, client);
-      }else{
+      if (client && clientSecret && (clientSecret !== client.clientSecret) ){
         callback(null, false);
+      }else{
+        callback(null, client);
       }
     })
     .error(function(err){

@@ -5,6 +5,7 @@ var express = require('express'),
 /* GET home page. */
 oauth.all = function(app){
   router.all('/token', app.oauth.grant());
+  router.all('/authCode', app.oauth.authCodeGrant());
 
   return router
 }
