@@ -14,7 +14,7 @@ var oauthserver = require('node-oauth2-server');
 var routes = {
   index: require('./routes/index'),
   users: require('./routes/users'),
-  oauth: require('./routes/oauth2')
+  oauth: require('./routes/oauth')
 };
 
 var db = require('./models/db');
@@ -23,7 +23,7 @@ var app = express();
 
 // Configure OAuth2 server
 app.oauth = oauthserver({
-  model: require('./oauth2/model'),
+  model: require('./models/oauth'),
   grants: ['password', 'authorization_code'],
   debug: true
 });

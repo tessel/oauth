@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .container
+    h2 Authorise access
+    form.form(name='authorise', action='/oauth/authorise', method='post')
+      input(name='client_id', type='hidden', value=client_id)
+      input(name='redirect_uri', type='hidden', value=redirect_uri)
+      input(name='response_type', type='hidden', value=response_type)
+      .form-group
+        label Username
+        input.form-control(name='username', type='text', placeholder='username')
+      .form-group
+        label Password
+        input.form-control(name='password', type='password', placeholder='password')
+      .checkbox
+        label
+          input(name='allow', type='checkbox', value='yes')
+          | Allow access?
+      button(type='submit') authorise

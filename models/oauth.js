@@ -93,6 +93,7 @@ model.saveAuthCode = function(authCode, clientId, expires, userId, callback){
     expires: expires,
   });
 
+  console.log('NEW CODE ==>', newCode);
   newCode
     .save()
     .success(function(persistedCode){
