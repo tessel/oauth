@@ -6,7 +6,6 @@ var db = require('../models/db')
 router.get('/', function(req, res) {
   db.User.findAll()
     .success(function(users){
-      console.log("USERS ==> ", users);
       res.render('users/index', {
         title: 'User Listing',
         users: users
