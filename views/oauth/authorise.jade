@@ -1,20 +1,26 @@
 extends layout
 
 block content
-  .container
-    h2 Authorise access
-    form.form(name='authorise', action='/oauth/authorise', method='post')
-      input(name='client_id', type='hidden', value=client_id)
-      input(name='redirect_uri', type='hidden', value=redirect_uri)
-      input(name='response_type', type='hidden', value=response_type)
-      .form-group
+  .row
+    .large-12.columns
+      h2 Authorise access
+  form(name='authorise', action='/oauth/authorise', method='post')
+    input(name='client_id', type='hidden', value=client_id)
+    input(name='redirect_uri', type='hidden', value=redirect_uri)
+    input(name='response_type', type='hidden', value=response_type)
+    .row
+      .large-12.columns
         label Username
-        input.form-control(name='username', type='text', placeholder='username')
-      .form-group
+          input(name='username', type='text', placeholder='username')
+    .row
+      .large-12.columns
         label Password
-        input.form-control(name='password', type='password', placeholder='password')
-      .checkbox
+          input(name='password', type='password', placeholder='password')
+    .row
+      .large-12.columns
         label
           input(name='allow', type='checkbox', value='yes')
           | Allow access?
-      button(type='submit') authorise
+    .row
+      .large-12.columns
+        button(type='submit') authorise

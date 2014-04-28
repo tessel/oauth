@@ -1,8 +1,14 @@
 doctype html
-html
+html(lang='en', class='no-js')
   head
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title= title
-    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
-    //script(src='/javascripts/bootstrap.min.js')
+    link(rel='stylesheet', href='/stylesheets/normalize.css')
+    link(rel='stylesheet', href='/stylesheets/foundation.min.css')
+    //script(src='/javascripts/vendor/modernizr.js')
   body
     block content
+    script(src='/javascripts/vendor/jquery.js')
+    script(src='/javascripts/foundation.min.js')
+    script
+      $(document).foundation();
