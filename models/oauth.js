@@ -109,7 +109,7 @@ model.getRefreshToken = function(refreshToken, callback) {
     .find({ where: { refreshToken: refreshToken } })
     .success(function(token){
       if (token){
-        callback(null, refreshToken);
+        callback(null, token);
       }else{
         callback(null, false);
       }
