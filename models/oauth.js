@@ -140,7 +140,7 @@ model.saveRefreshToken = function(refreshToken, clientId, expires, user, callbac
 // Required by GrantType password
 model.getUser = function(username, password, callback) {
   db.User
-    .find({ where: { username: username, password: password } })
+    .find({ where: { username: username, password_digest: password } })
     .success(function(user){
       if (user){
         callback(null, user);

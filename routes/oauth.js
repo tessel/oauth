@@ -8,7 +8,7 @@ oauthRoutes.all = function(oauth){
   router.all('/token', oauth.grant());
   router.post('/authorise', function(req, res, next){
     db.User
-      .find({ where: { username: req.body.username, password: req.body.password } })
+      .find({ where: { username: req.body.username, password_digest: req.body.password } })
       .success(function(user){
         if (user){
           req.user = user;
