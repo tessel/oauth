@@ -4,23 +4,28 @@ block content
   .row
     .large-12.columns
       h2 Authorise access
-  form(name='authorise', action='/oauth/authorise', method='post')
-    input(name='client_id', type='hidden', value=client_id)
-    input(name='redirect_uri', type='hidden', value=redirect_uri)
-    input(name='response_type', type='hidden', value=response_type)
-    .row
-      .large-12.columns
-        label Username
-          input(name='username', type='text', placeholder='username')
-    .row
-      .large-12.columns
-        label Password
-          input(name='password', type='password', placeholder='password')
-    .row
-      .large-12.columns
-        label
-          input(name='allow', type='checkbox', value='yes')
-          | Allow access?
-    .row
-      .large-12.columns
-        button(type='submit') authorise
+  .row
+    .large-12.medium-12.columns
+      form.custom(name='authorise', action='/oauth/authorise', method='post')
+        .row
+          .large-12.columns
+            input(name='response_type', type='hidden', value=response_type)
+            input(name='client_id', type='hidden', value=client_id)
+            input(name='response_type', type='hidden', value=response_type)
+            input(name='redirect_uri', type='hidden', value=redirect_uri)
+            label Username
+            br
+            input(name='username', type='text', placeholder='username')
+        .row
+          .large-12.columns
+            label Password
+            br
+            input(name='password', type='password', placeholder='password')
+        .row
+          .large-12.columns
+            label
+              input(name='allow', type='checkbox', value='yes')
+              | Allow access?
+        .row
+          .large-12.columns
+            button(type='submit') authorise

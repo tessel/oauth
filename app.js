@@ -24,7 +24,7 @@ var app = express();
 // Configure OAuth2 server
 app.oauth = oauthserver({
   model: require('./models/oauth'),
-  grants: ['password', 'authorization_code'],
+  grants: ['password', 'authorization_code', 'refresh_token'],
   debug: true
 });
 

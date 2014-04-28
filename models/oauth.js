@@ -119,11 +119,11 @@ model.getRefreshToken = function(refreshToken, callback) {
     });
 };
 
-model.saveRefreshToken = function(refreshToken, clientId, userId, expires, callback) {
+model.saveRefreshToken = function(refreshToken, clientId, expires, user, callback) {
   var newToken = db.OauthRefreshToken.build({
     refreshToken: refreshToken,
     clientId: clientId,
-    userId: userId,
+    userId: user.id,
     expires: expires,
   });
 
@@ -132,7 +132,7 @@ model.saveRefreshToken = function(refreshToken, clientId, userId, expires, callb
     .success(function(persistedToken){
       callback(false);
     })
-    .err(function(err){
+    .error(function(err){
       callback(err);
     });
 };
