@@ -1,5 +1,5 @@
 var User = function(sequelize, DataTypes){
-  var UserModel = sequelize.define('User', {
+  return sequelize.define('User', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, unique: true, primaryKey: true },
     username: { type: DataTypes.STRING, unique: true, validate: { notNull: true } },
     email: { type: DataTypes.STRING, unique: true, validate: { notNull: true } },
@@ -7,8 +7,6 @@ var User = function(sequelize, DataTypes){
     password_digest: { type: DataTypes.STRING, validate: { notNull: true } },
     api_key: { type: DataTypes.STRING, unique: true, validate: { notNull: true } }
   });
-
-  return UserModel;
 };
 
 module.exports = User;
