@@ -1,9 +1,10 @@
-var Sequelize= require('sequelize');
+var Sequelize = require('sequelize'),
+    dbConfig = require('../config/db_config')[process.env.NODE_ENV];
 
 var sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
   {
     host: '127.0.0.1',
     port: 5432,
