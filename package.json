@@ -30,6 +30,7 @@
     "stylus":         "0.42.3",
 
     "pg":             "3.0.3",
-    "sequelize":      "2.0.0-dev11"
+    "sequelize":      "2.0.0-dev11",
+    "bcrypt":         "0.7.8"
   }
 }
