@@ -1,26 +1,27 @@
-var dotenv = require('dotenv');
-dotenv.load();
+require('dotenv').load();
+
+var host = process.env.DB_HOST || "127.0.0.1";
 
 module.exports = {
   "development": {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "tessel_development",
-    "host": "127.0.0.1",
+    "database": "oauth_development",
+    "host": host,
     "dialect": "postgres"
   },
   "test": {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "tessel_test",
-    "host": "127.0.0.1",
+    "database": "oauth_test",
+    "host": host,
     "dialect": "postgres"
   },
   "production": {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "tessel_production",
-    "host": "127.0.0.1",
+    "database": "oauth_production",
+    "host": host,
     "dialect": "postgres"
   }
 }
