@@ -10,6 +10,12 @@ var User = function(sequelize, DataTypes){
     apiKey: { type: DataTypes.STRING, unique: true, allowNull: true }
   }, {
     instanceMethods: {
+      confirmPassword: function(user){
+        if (user.password === user.passwordConfirmation){
+          this.passwordDigest = user.password;
+        }
+        return this;
+      },
       digest: function(){
         var salt = bcrypt.genSaltSync(10);
         this.passwordDigest = bcrypt.hashSync(this.passwordDigest, salt);

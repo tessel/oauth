@@ -5,6 +5,8 @@ process.env.NODE_ENV = process.env.NODE_ENV || "development";
 var path = require('path');
 
 var express = require('express'),
+    session = require('express-session'),
+    RedisStore = require('connect-redis')(session),
     favicon = require('static-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
@@ -40,6 +42,12 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  session({
+    secret: 'some secret',
+    store: new RedisStore()
+  })
+);
 
 // Use OAuth to grant tokens
 app.use('/oauth', routes.oauth.all(app.oauth));
@@ -67,7 +75,6 @@ app.use(function(req, res, next) {
 });
 
 /// error handlers
-
 // Use OAuth2 error handler
 app.use(app.oauth.errorHandler());
 

@@ -5,13 +5,13 @@ db.User
     username: 'johndoe',
     email: 'johndoe@tessel.io',
     name: 'John Doe',
-    passwordDigest: 'password',
+    password: 'password',
   })
   .digest()
   .genApiKey()
   .save()
   .success(function(user){
-    console.log('user ====>', user);
+    console.log('user =>' + user.username + ' stored');
   })
   .error(function(err){
     console.log('error ====>', err);
@@ -22,13 +22,13 @@ db.User
     username: 'janedoe',
     email: 'janedoe@tessel.io',
     name: 'Jane Doe',
-    passwordDigest: 'password',
+    password: 'password',
   })
   .digest()
   .genApiKey()
   .save()
   .success(function(user){
-    console.log('user ====>', user);
+    console.log('user =>' + user.username + ' stored');
   })
   .error(function(err){
     console.log('error ====>', err);
