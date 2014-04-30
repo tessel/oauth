@@ -24,12 +24,12 @@ module.exports = {
         type: DataTypes.STRING
       },
 
-      password_digest: {
+      passwordDigest: {
         type: DataTypes.STRING,
         allowNull: false
       },
 
-      api_key: {
+      apiKey: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false
