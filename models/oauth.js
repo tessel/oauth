@@ -143,7 +143,7 @@ model.getUser = function(username, password, callback) {
   db.User
     .find({ where: { username: username } })
     .success(function(user){
-      if (user && bcrypt.compareSync(password, user.password_digest)){
+      if (user && bcrypt.compareSync(password, user.passwordDigest)){
         callback(null, user);
       }else{
         callback(null, false);
