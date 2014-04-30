@@ -1,4 +1,5 @@
 var db = require('../models/db'),
+    bcrypt = require('bcrypt'),
     model = {};
 
 // Functions always required by node-oauth2-server
@@ -21,7 +22,7 @@ model.getClient = function(clientId, clientSecret, callback) {
   db.OauthClient
     .find({ where: { clientId: clientId } })
     .success(function(client){
-      if (client && clientSecret && (clientSecret !== client.clientSecret) ){
+      if (client && clientSecret && !bcrypt.compareSync(clientSecret, client.clientSecret)){
         callback(null, false);
       }else{
         callback(null, client);
@@ -140,9 +141,9 @@ model.saveRefreshToken = function(refreshToken, clientId, expires, user, callbac
 // Required by GrantType password
 model.getUser = function(username, password, callback) {
   db.User
-    .find({ where: { username: username, password_digest: password } })
+    .find({ where: { username: username } })
     .success(function(user){
-      if (user){
+      if (user && bcrypt.compareSync(password, user.password_digest)){
         callback(null, user);
       }else{
         callback(null, false);
