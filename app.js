@@ -52,7 +52,7 @@ app.use(
 
 // Use OAuth to grant tokens
 app.use('/oauth', routes.oauth.all(app.oauth));
-app.use('/', routes.login);
+app.use('/',      routes.login);
 app.use('/',      routes.index.all(app.oauth));
 app.use('/users', routes.users);
 
