@@ -23,7 +23,7 @@ module.exports = {
 
         .success(function(user){
           if (!user) {
-            return res.render('oauth/oauthorize', req.body);
+            return res.render('oauth/oauthorise', req.body);
           }
 
           req.user = user;
