@@ -60,7 +60,7 @@ model.saveAccessToken = function(accessToken, clientId, expires, user, callback)
       clientId: clientId,
       userId: user.id,
       expires: expires
-    });
+    })
     .success(function(persistedToken){
       callback(false);
     })
