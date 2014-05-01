@@ -3,24 +3,24 @@ extends ../layout
 block content
   .row
     .large-12.columns
-      h2 Authorise access
-  form.custom(name='authorise', action='/oauth/authorise', method='post')
-    .row
-      .large-12.columns
-        input(name='client_id', type='hidden', value=client_id)
-        input(name='response_type', type='hidden', value=response_type)
-        input(name='redirect_uri', type='hidden', value=redirect_uri)
-        label Username
-          input(name='username', type='text', placeholder='username')
-    .row
-      .large-12.columns
-        label Password
-          input(name='password', type='password', placeholder='password')
-    .row
-      .large-12.columns
-        label
-          input(name='allow', type='checkbox', value='yes')
-          | Allow access?
-    .row
-      .large-12.columns
-        button(type='submit') authorise
+      h2.subheader Authorise access
+  .panel
+    form.custom(name='authorise', action='/oauth/authorise', method='post')
+      .row
+        .large-4.columns
+          input(name='client_id', type='hidden', value=client_id)
+          input(name='response_type', type='hidden', value=response_type)
+          input(name='redirect_uri', type='hidden', value=redirect_uri)
+          h3.subheader Authorise App: &nbsp;
+            = client_id
+      .row
+        .large-6.columns.end
+          p Do you wish to authorise this application to access your user profile information?
+      .row
+        .large-12.columns
+          label
+            input(name='allow', type='checkbox', value='yes')
+            | Allow access?
+      .row
+        .large-12.columns
+          button.radius.success(type='submit') authorise

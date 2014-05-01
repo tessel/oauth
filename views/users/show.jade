@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  .row
+    .large-12.columns
+      h2.subheader= title
+  .panel
+    .row
+      .large-12.columns
+          .row
+            .large-2.columns.text-right
+              label Username:
+            .large-10.columns
+              p=user.username
+          .row
+            .large-2.columns.text-right
+              label email:
+            .large-10.columns
+              p=user.email
+          .row
+            .large-2.columns.text-right
+              label Name:
+            .large-10.columns
+              p=user.name
+          .row
+            .large-2.columns.text-right
+              label API Key:
+            .large-10.columns
+              p=user.apiKey
+          .row
+            .large-2.columns
+              a.button.alert.radius(href="/logout") logout
+            .large-10.columns
+              a.button.success.radius(href="/genApiKey") Re-generate API Key

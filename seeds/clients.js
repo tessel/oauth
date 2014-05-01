@@ -6,6 +6,7 @@ db.OauthClient
     clientSecret: 'the-hybrid-group',
     name: 'http://www.hybridgroup.com',
     grantTypeAllowed: 'password|authorization_code|refresh_token',
+    redirectUri: 'http://hybridgroup.com'
   })
   .digest()
   .save()
@@ -22,6 +23,7 @@ db.OauthClient
     clientSecret: 'the-tessel-cloud',
     name: 'http://www.tessel-cloud.io',
     grantTypeAllowed: 'password|authorization_code|refresh_token',
+    redirectUri: 'http://tessel.io'
   })
   .digest()
   .save()
