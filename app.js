@@ -45,7 +45,7 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
-    secret: 'some secret',
+    secret: process.env.SESSION_SECRET,
     store: new RedisStore()
   })
 );
