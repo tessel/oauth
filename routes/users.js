@@ -39,7 +39,7 @@ router.post('/', function(req, res) {
 /* GET Show User Details */
 router.get('/:id', function(req, res){
   db.User
-    .find({ where: { id: req.session.user.id } })
+    .find({ where: { id: req.session.userId } })
     .success(function(user){
       if (user){
         res.render('users/show', {
