@@ -1,63 +1,69 @@
-var express = require('express'),
-    router = express.Router(),
-    db = require('../models/db');
+var router = require('express').Router();
 
-/* GET New User form*/
+var db = require('../models/db'),
+    User = db.User;
+
+// GET /users/new
+//
+// Renders a form to create a new user
 router.get('/new', function(req, res) {
-  var user = db.User.build(req.body.user);
   res.render('users/new', {
     title: 'Register new user',
-    user: user
+    user: User.build(req.body.user)
   });
 });
 
-/* POST Register New User */
+// POST /users
+//
+// Creates a new User
 router.post('/', function(req, res) {
   var newUser = req.body.user;
 
-  db.User
+  User
     .build(newUser)
     .confirmPassword(newUser)
     .digest()
     .genApiKey()
     .save()
-    .success(function(user){
-      req.session.userId = user.id;
-      res.render('users/show', {
-        title: 'User profile',
-        user: user
-      });
-    })
-    .error(function(err){
-      res.render('users/new' + user.id, {
+
+    .error(function(err) {
+      res.render('users/new', {
         title: 'Register new user',
         user: req.body.user
       });
+    })
+
+    .success(function(user) {
+      req.session.userId = user.id;
+      res.redirect('/users/show');
     });
 });
 
-/* GET Show User Details */
-router.get('/:id', function(req, res){
-  db.User
+// GET /users/show
+//
+// Shows details about the current user
+router.get('/show', function(req, res) {
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+
+  User
     .find({ where: { id: req.session.userId } })
-    .success(function(user){
-      if (user){
-        res.render('users/show', {
-          title: 'User profile',
-          user: user
-        });
-      }else{
-        res.render('login', {
-          title: 'User Login',
-          user: user
-        });
-      }
-    })
-    .error(function(err){
+
+    .error(function(err) {
        console.log("ERROR ====>", err);
-       res.render('login', {
-          title: 'User Login',
-       });
+       res.redirect('/login');
+    })
+
+    .success(function(user) {
+      if (!user) {
+        return res.redirect('/login');
+      }
+
+      res.render('users/show', {
+        title: 'User Profile',
+        user: user
+      });
     });
 });
 
