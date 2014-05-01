@@ -15,6 +15,7 @@ var express = require('express'),
 var oauthserver = require('node-oauth2-server');
 
 var routes = {
+  login: require('./routes/login'),
   index: require('./routes/index'),
   users: require('./routes/users'),
   oauth: require('./routes/oauth')
@@ -51,6 +52,7 @@ app.use(
 
 // Use OAuth to grant tokens
 app.use('/oauth', routes.oauth.all(app.oauth));
+app.use('/login', routes.login);
 app.use('/',      routes.index.all(app.oauth));
 app.use('/users', routes.users);
 
