@@ -42,7 +42,7 @@ router.post('/login', function(req, res, next) {
 });
 
 router.all('/logout', function(req, res) {
-  req.session.userId = null
+  req.session.userId = null;
   res.redirect('/login');
 });
 
