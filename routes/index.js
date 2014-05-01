@@ -10,6 +10,11 @@ index.all = function(oauth){
     res.render('index', { title: 'Express' });
   });
 
+  /* GET Register new user redirects to users/new. */
+  router.get('/register', function(req, res) {
+    res.redirect('/users/new');
+  });
+
   return router;
 };
 
