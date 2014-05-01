@@ -20,11 +20,7 @@ router.post('/', function(req, res) {
   var newUser = req.body.user;
 
   User
-    .build(newUser)
-    .confirmPassword(newUser)
-    .digest()
-    .genApiKey()
-    .save()
+    .create(newUser)
 
     .error(function(err) {
       res.render('users/new', {
@@ -51,7 +47,7 @@ router.get('/show', function(req, res) {
     .find({ where: { id: req.session.userId } })
 
     .error(function(err) {
-       console.log("ERROR ====>", err);
+       console.log("Error ==>", err);
        res.redirect('/login');
     })
 

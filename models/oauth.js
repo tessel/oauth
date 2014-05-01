@@ -54,14 +54,13 @@ model.grantTypeAllowed = function(clientId, grantType, callback) {
 };
 
 model.saveAccessToken = function(accessToken, clientId, expires, user, callback) {
-  var newToken = db.OauthAccessToken.build({
-    accessToken: accessToken,
-    clientId: clientId,
-    userId: user.id,
-    expires: expires
-  });
-  newToken
-    .save()
+  db.OauthAccessToken
+    .create({
+      accessToken: accessToken,
+      clientId: clientId,
+      userId: user.id,
+      expires: expires
+    });
     .success(function(persistedToken){
       callback(false);
     })
@@ -87,15 +86,13 @@ model.getAuthCode = function(authCode, callback) {
 };
 
 model.saveAuthCode = function(authCode, clientId, expires, userId, callback){
-  var newCode = db.OauthAuthCode.build({
-    authCode: authCode,
-    clientId: clientId,
-    userId: userId,
-    expires: expires,
-  });
-
-  newCode
-    .save()
+  db.OauthAuthCode
+    .create({
+      authCode: authCode,
+      clientId: clientId,
+      userId: userId,
+      expires: expires,
+    })
     .success(function(persistedCode){
       callback(false);
     })
@@ -121,15 +118,13 @@ model.getRefreshToken = function(refreshToken, callback) {
 };
 
 model.saveRefreshToken = function(refreshToken, clientId, expires, user, callback) {
-  var newToken = db.OauthRefreshToken.build({
-    refreshToken: refreshToken,
-    clientId: clientId,
-    userId: user.id,
-    expires: expires,
-  });
-
-  newToken
-    .save()
+  db.OauthRefreshToken
+    .create({
+      refreshToken: refreshToken,
+      clientId: clientId,
+      userId: user.id,
+      expires: expires,
+    })
     .success(function(persistedToken){
       callback(false);
     })

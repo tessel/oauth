@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true
       },
 
-      clientSecret: {
+      clientSecretDigest: {
         type: DataTypes.TEXT,
         allowNull: false
       },
