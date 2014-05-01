@@ -19,8 +19,8 @@ index.all = function(oauth){
     .find({ where: { username: req.body.username } })
     .success(function(user){
       if (user){
-        req.session.userId = user.id;
-        if (bcrypt.hashSync(req.body.password, user.passwordDigest)){
+        if (bcrypt.compareSync(req.body.password, user.passwordDigest)){
+          req.session.userId = user.id;
           if (req.body.client_id && req.body.redirect_uri){
             res.render('oauth/authorise', {
               title: 'Authorise',
@@ -43,16 +43,17 @@ index.all = function(oauth){
       });
     })
     .error(function(err){
-       console.log("ERROR ====>", err);
        res.render('login', {
           title: 'Login',
        });
     });
   });
 
-  router.get('/logout', oauth.authorise(), function(req, res) {
-    res.render('logout', { title: 'Express' });
+  router.all('/logout', function(req, res) {
+    req.session.userId = null;
+    res.redirect('/login');
   });
+
   return router;
 };
 
