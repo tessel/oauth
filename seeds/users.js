@@ -6,7 +6,9 @@ db.User
     email: 'johndoe@tessel.io',
     name: 'John Doe',
     password: 'password',
+    passwordConfirmation: 'password'
   })
+  .confirmPassword()
   .digest()
   .genApiKey()
   .save()
@@ -23,7 +25,9 @@ db.User
     email: 'janedoe@tessel.io',
     name: 'Jane Doe',
     password: 'password',
+    passwordConfirmation: 'password'
   })
+  .confirmPassword()
   .digest()
   .genApiKey()
   .save()
