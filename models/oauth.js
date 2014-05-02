@@ -22,7 +22,7 @@ model.getClient = function(clientId, clientSecret, callback) {
   db.OauthClient
     .find({ where: { clientId: clientId } })
     .success(function(client){
-      if (client && clientSecret && !bcrypt.compareSync(clientSecret, client.clientSecret)){
+      if (client && clientSecret && !bcrypt.compareSync(clientSecret, client.clientSecretDigest)){
         callback(null, false);
       }else{
         callback(null, client);
