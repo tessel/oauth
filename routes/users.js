@@ -3,6 +3,14 @@ var router = require('express').Router();
 var db = require('../models/db'),
     User = db.User;
 
+// Validate user is logged in and exist in session
+var authenticateUser = function(req, res, next){
+  if (req.session.userId != null ){
+    next();
+  }else{
+    res.redirect('/login');
+  }
+}
 // GET /users/new
 //
 // Renders a form to create a new user
@@ -38,7 +46,7 @@ router.post('/', function(req, res) {
 // GET /users/show
 //
 // Shows details about the current user
-router.get('/show', function(req, res) {
+router.get('/show', authenticateUser, function(req, res) {
   if (!req.session.userId) {
     return res.redirect('/login');
   }

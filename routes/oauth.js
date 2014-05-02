@@ -13,7 +13,7 @@ module.exports = {
     // POST /oauth/authorise
     //
     // Verify user login and authorization access
-    router.post('/authorise', function(req, res, next){
+    router.post('/authorise', this.authenticateUser, function(req, res, next){
       User
         .find({ where: { id: req.session.userId } })
 
@@ -36,7 +36,7 @@ module.exports = {
     // GET /oauth/authorize
     //
     // Display user authorization and login form
-    router.get('/authorise', function(req, res){
+    router.get('/authorise', this.authenticateUser ,function(req, res, next){
       res.render('oauth/authorise', {
         title: 'Authorise access',
         response_type: req.query.response_type,
@@ -46,5 +46,13 @@ module.exports = {
     });
 
     return router;
+  },
+
+  authenticateUser: function(req, res, next){
+    if (req.session.userId != null ){
+      next();
+    }else{
+      res.redirect('/login');
+    }
   }
 }
