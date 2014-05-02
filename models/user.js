@@ -1,4 +1,7 @@
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt'),
+    rest = require('restler');
+
+var CLOUD_URI = process.env.CLOUD_URI;
 
 var User = function(sequelize, DataTypes){
   return sequelize.define('User', {
@@ -37,7 +40,17 @@ var User = function(sequelize, DataTypes){
         user.digest();
         user.genApiKey();
         next();
-      }
+      },
+
+      // POSTs the User ID and API Key to Cloud so they can be used to control
+      // Tessels
+      afterCreate: function(user, next) {
+        var uri = CLOUD_URI + "/users",
+            data = { id: user.id, apiKey: user.apiKey };
+
+        rest.postJson(uri, data);
+        next();
+      },
     },
 
     instanceMethods: {
@@ -65,6 +78,13 @@ var User = function(sequelize, DataTypes){
         this.apiKey = new Buffer(apiKey).toString('base64');
 
         return this;
+      },
+
+      updateCloud: function() {
+        var uri = CLOUD_URI + "/users/" + this.id,
+            data = function() { apiKey: this.apiKey };
+
+        rest.putJson(uri, data);
       }
     },
 
