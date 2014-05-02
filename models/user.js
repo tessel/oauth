@@ -11,7 +11,10 @@ var User = function(sequelize, DataTypes){
   }, {
     validate: {
       password: function(next) {
-        if ((this._password === undefined) || ((typeof(this._password) === 'string') && (this._password === this._passwordConfirmation))){
+        var pwd = this._password,
+            confirm = this._passwordConfirmation;
+
+        if ((pwd === undefined) || ((pwd != '') && (pwd === confirm))){
           next()
         } else {
           next('Password and password confirmation do not match!')
@@ -35,9 +38,11 @@ var User = function(sequelize, DataTypes){
     },
     instanceMethods: {
       digest: function(){
-        var salt = bcrypt.genSaltSync(10);
+        var salt = bcrypt.genSaltSync(10),
+            pwd = this._password,
+            confirm = this._passwordConfirmation;
 
-        if ((this._password != null) && (typeof(this._password) === 'string') && (this._password === this._passwordConfirmation)){
+        if ((pwd != null) && (pwd != '') && (pwd === confirm)){
           this.passwordDigest = bcrypt.hashSync(this._password, salt);
         }
 

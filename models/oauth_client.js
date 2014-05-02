@@ -9,7 +9,10 @@ var OauthClient = function(sequelize, DataTypes){
   }, {
     validate: {
       clientSecret: function(next) {
-        if ((this._clientSecret === undefined) || ((typeof(this._clientSecret) === 'string') && (this._clientSecret === this._clientSecretConfirmation))){
+        var secret = this._clientSecret,
+            confirm = this._clientSecretConfirmation;
+
+        if ((secret === undefined) || ((secret != '') && (secret === confirm))){
           next();
         } else {
           next('Client secret and client secret confirmation do not match!');
@@ -32,9 +35,11 @@ var OauthClient = function(sequelize, DataTypes){
     },
     instanceMethods: {
       digest: function(){
-        var salt = bcrypt.genSaltSync(10);
+        var salt = bcrypt.genSaltSync(10),
+            secret = this._clientSecret,
+            confirm = this._clientSecretConfirmation;
 
-        if ((this._clientSecret != null) && (typeof(this._clientSecret) === 'string') && (this._clientSecret === this._clientSecretConfirmation)){
+        if ((secret != null) && (secret != '') && (secret === confirm)){
           this.clientSecretDigest = bcrypt.hashSync(this._clientSecret, salt);
         }
 
