@@ -5,7 +5,12 @@ var db = require('../models/db'),
     User = db.User;
 
 router.get('/login', function(req, res) {
-  res.render('login', { title: 'Login' });
+  return res.render('login', {
+            title: 'Login',
+            client_id: req.query.client_id,
+            redirect_uri: req.query.redirect_uri,
+            response_type: req.query.response_type
+          });
 });
 
 router.post('/login', function(req, res, next) {
@@ -32,7 +37,8 @@ router.post('/login', function(req, res, next) {
             title: 'Authorize',
             user: user,
             client_id: req.body.client_id,
-            redirect_uri: req.body.redirect_uri
+            redirect_uri: req.body.redirect_uri,
+            response_type: req.body.response_type
           });
         }
 

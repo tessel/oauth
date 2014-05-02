@@ -52,7 +52,7 @@ module.exports = {
     if (req.session.userId != null ){
       next();
     }else{
-      res.redirect('/login');
+      res.redirect('/login' + req._parsedUrl.search);
     }
   }
 }
