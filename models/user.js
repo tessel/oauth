@@ -11,46 +11,56 @@ var User = function(sequelize, DataTypes){
   }, {
     validate: {
       password: function(next) {
-        var pwd = this._password,
-            confirm = this._passwordConfirmation;
+        var pass = this._password,
+            conf = this._passwordConfirmation;
 
-        if ((pwd === undefined) || ((pwd != '') && (pwd === confirm))){
+        if ((pass === undefined) || ((pass != '') && (pass === conf))){
           next()
         } else {
           next('Password and password confirmation do not match!')
         }
       }
     },
+
     getterMethods: {
       password: function(){ return this._password },
       passwordConfirmation: function(){ return this._passwordConfirmation }
     },
+
     setterMethods: {
       password: function(value){ this._password = value; },
       passwordConfirmation: function(value){ this._passwordConfirmation = value; }
     },
-    hooks:{
+
+    hooks: {
       beforeValidate: function(user, next){
         user.digest();
         user.genApiKey();
         next();
       }
     },
+
     instanceMethods: {
       digest: function(){
         var salt = bcrypt.genSaltSync(10),
-            pwd = this._password,
-            confirm = this._passwordConfirmation;
+            pass = this._password,
+            conf = this._passwordConfirmation;
 
-        if ((pwd != null) && (pwd != '') && (pwd === confirm)){
+        if ((pass != null) && (pass != '') && (pass === conf)){
           this.passwordDigest = bcrypt.hashSync(this._password, salt);
         }
 
         return this;
       },
+
       genApiKey: function(){
-        var salt = bcrypt.genSaltSync(5),
-            apiKey = bcrypt.hashSync('' + Date.now() + '' + this.username + '' + Math.random(), salt);
+        var salt = bcrypt.genSaltSync(5);
+
+        var apiKey = bcrypt.hashSync(
+          Date.now().toString() +
+          this.username +
+          Math.random().toString()
+        , salt);
 
         this.apiKey = new Buffer(apiKey).toString('base64');
 
