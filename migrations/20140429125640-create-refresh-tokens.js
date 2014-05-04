@@ -1,6 +1,6 @@
 module.exports = {
   up: function(migration, DataTypes, done) {
-    migration.createTable('OauthAuthTokens', {
+    migration.createTable('RefreshTokens', {
       id: {
         type: DataTypes.INTEGER,
         unique: true,
@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true
       },
 
-      authCode: {
+      refreshToken: {
         type: DataTypes.TEXT,
         unique: true,
         allowNull: false
@@ -33,10 +33,11 @@ module.exports = {
       updatedAt: DataTypes.DATE
     });
 
-    done()
+    done();
   },
+
   down: function(migration, DataTypes, done) {
-    migration.dropTable('OauthAuthTokens');
-    done()
+    migration.dropTable('RefreshTokens');
+    done();
   }
 }

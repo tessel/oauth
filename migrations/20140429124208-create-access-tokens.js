@@ -1,6 +1,6 @@
 module.exports = {
   up: function(migration, DataTypes, done) {
-    migration.createTable('OauthAccessTokens', {
+    migration.createTable('AccessTokens', {
       id: {
         type: DataTypes.INTEGER,
         unique: true,
@@ -36,7 +36,7 @@ module.exports = {
   },
 
   down: function(migration, DataTypes, done) {
-    migration.dropTables('OauthAccessTokens');
+    migration.dropTables('AccessTokens');
     done()
   }
 }

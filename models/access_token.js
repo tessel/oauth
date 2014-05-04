@@ -1,5 +1,5 @@
-var OauthAccessToken = function(sequelize, DataTypes){
-  return sequelize.define('OauthAccessToken', {
+var AccessToken = function(sequelize, DataTypes){
+  return sequelize.define('AccessToken', {
     id: { type: DataTypes.INTEGER, unique: true, autoIncrement: true, primaryKey: true },
     accessToken: { type: DataTypes.TEXT, unique: true, allowNull: false },
     clientId: { type: DataTypes.STRING, allowNull: false },
@@ -8,4 +8,4 @@ var OauthAccessToken = function(sequelize, DataTypes){
   });
 };
 
-module.exports = OauthAccessToken;
+module.exports = AccessToken;

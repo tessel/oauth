@@ -1,5 +1,5 @@
-var OauthRefreshToken = function(sequelize, DataTypes){
-  return sequelize.define('OauthRefreshToken', {
+var RefreshToken = function(sequelize, DataTypes){
+  return sequelize.define('RefreshToken', {
     id: { type: DataTypes.INTEGER, unique: true, autoIncrement: true, primaryKey: true },
     refreshToken: { type: DataTypes.TEXT, unique: true, allowNull: false },
     clientId: { type: DataTypes.STRING, allowNull: false },
@@ -8,4 +8,4 @@ var OauthRefreshToken = function(sequelize, DataTypes){
   });
 };
 
-module.exports = OauthRefreshToken;
+module.exports = RefreshToken;

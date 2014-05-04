@@ -21,7 +21,7 @@ var routes = {
   oauth: require('./routes/oauth')
 };
 
-var db = require('./models/db');
+var db = require('./database/model');
 
 var app = express();
 
@@ -50,7 +50,7 @@ app.use(
   })
 );
 
-// Use OAuth to grant tokens
+// Setup routes for OAuth and services.
 app.use('/oauth', routes.oauth.all(app.oauth));
 app.use('/',      routes.login);
 app.use('/',      routes.index.all(app.oauth));

@@ -1,6 +1,6 @@
 var db = require('../models/db');
 
-db.OauthClient
+db.Client
   .create({
     clientId: 'thg',
     clientSecret: 'the-hybrid-group',
@@ -16,7 +16,7 @@ db.OauthClient
     console.log('error ====>', err);
   })
 
-db.OauthClient
+db.Client
   .create({
     clientId: 'tessel-cloud',
     clientSecret: 'the-tessel-cloud',
