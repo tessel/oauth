@@ -4,7 +4,7 @@ var db = require('../models/db'),
 
 // Functions always required by node-oauth2-server
 model.getAccessToken = function(accessToken, callback) {
-  db.OauthAccessToken
+  db.AccessToken
     .find({ where: { accessToken: accessToken } })
     .success(function(token){
       if (token) {
@@ -19,7 +19,7 @@ model.getAccessToken = function(accessToken, callback) {
 };
 
 model.getClient = function(clientId, clientSecret, callback) {
-  db.OauthClient
+  db.Client
     .find({ where: { clientId: clientId } })
     .success(function(client){
       if (client && clientSecret && !bcrypt.compareSync(clientSecret, client.clientSecretDigest)){
@@ -34,7 +34,7 @@ model.getClient = function(clientId, clientSecret, callback) {
 };
 
 model.grantTypeAllowed = function(clientId, grantType, callback) {
-  db.OauthClient
+  db.Client
     .find({ where: { clientId: clientId } })
     .success(function(client){
       var regex = new RegExp(grantType, 'i'),
@@ -54,7 +54,7 @@ model.grantTypeAllowed = function(clientId, grantType, callback) {
 };
 
 model.saveAccessToken = function(accessToken, clientId, expires, user, callback) {
-  db.OauthAccessToken
+  db.AccessToken
     .create({
       accessToken: accessToken,
       clientId: clientId,
@@ -71,7 +71,7 @@ model.saveAccessToken = function(accessToken, clientId, expires, user, callback)
 
 // Required by GrantType authorization_code
 model.getAuthCode = function(authCode, callback) {
-  db.OauthAuthCode
+  db.AuthCode
     .find({ where: { authCode: authCode } })
     .success(function(code){
       if (code){
@@ -86,7 +86,7 @@ model.getAuthCode = function(authCode, callback) {
 };
 
 model.saveAuthCode = function(authCode, clientId, expires, userId, callback){
-  db.OauthAuthCode
+  db.AuthCode
     .create({
       authCode: authCode,
       clientId: clientId,
@@ -103,7 +103,7 @@ model.saveAuthCode = function(authCode, clientId, expires, userId, callback){
 
 // Required by GrantType refresh_token
 model.getRefreshToken = function(refreshToken, callback) {
-  db.OauthRefreshToken
+  db.RefreshToken
     .find({ where: { refreshToken: refreshToken } })
     .success(function(token){
       if (token){
@@ -118,7 +118,7 @@ model.getRefreshToken = function(refreshToken, callback) {
 };
 
 model.saveRefreshToken = function(refreshToken, clientId, expires, user, callback) {
-  db.OauthRefreshToken
+  db.RefreshToken
     .create({
       refreshToken: refreshToken,
       clientId: clientId,

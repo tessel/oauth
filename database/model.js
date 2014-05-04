@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize'),
-    dbConfig = require('../config/db')[process.env.NODE_ENV];
+    dbConfig = require('../config/database')[process.env.NODE_ENV];
 
 var sequelize = new Sequelize(
   dbConfig.database,
@@ -19,9 +19,9 @@ var db = {
 
 // import models
 db['User'] = db.sequelize.import('./user');
-db['OauthClient'] = db.sequelize.import('./oauth_client');
-db['OauthAccessToken'] = db.sequelize.import('./oauth_access_token');
-db['OauthRefreshToken'] = db.sequelize.import('./oauth_refresh_token');
-db['OauthAuthCode'] = db.sequelize.import('./oauth_auth_code');
+db['Client'] = db.sequelize.import('./client');
+db['AccessToken'] = db.sequelize.import('./access_token');
+db['RefreshToken'] = db.sequelize.import('./refresh_token');
+db['AuthCode'] = db.sequelize.import('./auth_code');
 
 module.exports = db;

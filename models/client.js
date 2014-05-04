@@ -1,7 +1,7 @@
 var bcrypt = require('bcrypt');
 
-var OauthClient = function(sequelize, DataTypes){
-  return sequelize.define('OauthClient', {
+var Client = function(sequelize, DataTypes){
+  return sequelize.define('Client', {
     clientId: { type: DataTypes.STRING, unique:true, allowNull: false, primaryKey: true },
     clientSecretDigest: { type: DataTypes.TEXT, allowNull: false },
     redirectUri: { type: DataTypes.TEXT },
@@ -49,4 +49,4 @@ var OauthClient = function(sequelize, DataTypes){
   });
 };
 
-module.exports = OauthClient;
+module.exports = Client;

@@ -1,6 +1,6 @@
 module.exports = {
   up: function(migration, DataTypes, done) {
-    migration.createTable('OauthClients', {
+    migration.createTable('Clients', {
       clientId: {
         type: DataTypes.STRING,
         unique:true,
@@ -28,7 +28,7 @@ module.exports = {
   },
 
   down: function(migration, DataTypes, done) {
-    migration.dropTable('OauthClients');
+    migration.dropTable('Clients');
     done();
   }
 }

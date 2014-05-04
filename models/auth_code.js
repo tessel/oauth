@@ -1,5 +1,5 @@
-var OauthAuthCode = function(sequelize, DataTypes){
-  return sequelize.define('OauthAuthToken', {
+var AuthCode = function(sequelize, DataTypes){
+  return sequelize.define('AuthToken', {
     id: { type: DataTypes.INTEGER, unique: true, autoIncrement: true, primaryKey: true },
     authCode: { type: DataTypes.TEXT, unique: true, allowNull: false },
     clientId: { type: DataTypes.STRING, allowNull: false },
@@ -8,4 +8,4 @@ var OauthAuthCode = function(sequelize, DataTypes){
   });
 };
 
-module.exports = OauthAuthCode;
+module.exports = AuthCode;
