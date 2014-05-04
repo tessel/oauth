@@ -54,7 +54,7 @@ app.use(
 app.use('/oauth', routes.oauth.all(app.oauth));
 app.use('/',      routes.login);
 app.use('/',      routes.index.all(app.oauth));
-app.use('/users', routes.users);
+app.use('/users', routes.users.all(app.oauth));
 
 // Setup and Sync Database and load models
 db.sequelize
