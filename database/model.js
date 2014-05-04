@@ -18,10 +18,10 @@ var db = {
 };
 
 // import models
-db['User'] = db.sequelize.import('./user');
-db['Client'] = db.sequelize.import('./client');
-db['AccessToken'] = db.sequelize.import('./access_token');
-db['RefreshToken'] = db.sequelize.import('./refresh_token');
-db['AuthCode'] = db.sequelize.import('./auth_code');
+db['User'] = db.sequelize.import('../models/user');
+db['Client'] = db.sequelize.import('../models/client');
+db['AccessToken'] = db.sequelize.import('../models/access_token');
+db['RefreshToken'] = db.sequelize.import('../models/refresh_token');
+db['AuthCode'] = db.sequelize.import('../models/auth_code');
 
 module.exports = db;

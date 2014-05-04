@@ -1,6 +1,6 @@
 var router = require('express').Router();
 
-var db = require('../models/db'),
+var db = require('../database/model'),
     User = db.User;
 
 // Validate user is logged in and exist in session

@@ -1,4 +1,4 @@
-var db = require('../models/db'),
+var db = require('../database/model'),
     bcrypt = require('bcrypt'),
     model = {};
 

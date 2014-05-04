@@ -1,7 +1,7 @@
 var router = require('express').Router(),
     bcrypt = require('bcrypt');
 
-var db = require('../models/db'),
+var db = require('../database/model'),
     User = db.User;
 
 router.get('/login', function(req, res) {
