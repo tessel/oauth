@@ -1,5 +1,5 @@
 var router = require('express').Router(),
-    appController = require('../controllers/application.js'),
+    appController = require('../controllers/application_controller.js'),
     usersController = require('../controllers/users_controller.js');
 
 module.exports = {

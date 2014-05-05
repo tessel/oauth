@@ -1,16 +1,13 @@
-var router = require('express').Router();
+var router = require('express').Router(),
+    pagesController = require('../controllers/pages_controller.js');
 
 module.exports = {
   all: function(oauth) {
     // GET /
-    router.get('/', oauth.authorise(), function(req, res) {
-      res.render('index', { title: 'Express' });
-    });
+    router.get('/', pagesController.index);
 
-    // GET /register
-    router.get('/register', function(req, res) {
-      res.redirect('/users/new');
-    });
+    // GET /register a new user
+    router.get('/register', pagesController.register);
 
     return router;
   }

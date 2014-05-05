@@ -22,7 +22,7 @@ AppController.prototype.authenticateUser = function(req, res, next){
         })
     }
   }else{
-    return res.redirect('/login');
+    res.redirect('/login' + req._parsedUrl.search);
   }
 }
 
