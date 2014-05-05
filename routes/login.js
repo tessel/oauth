@@ -20,7 +20,8 @@ router.post('/login', function(req, res, next) {
   User
     .find({ where: { username: username } })
 
-    .error(function() {
+    .error(function(err) {
+      console.log(err);
       res.render('login', { title: 'Login' });
     })
 
@@ -42,7 +43,7 @@ router.post('/login', function(req, res, next) {
           });
         }
 
-        res.redirect("/users/show");
+        res.redirect("/users/" + user.id);
       }
     });
 });
