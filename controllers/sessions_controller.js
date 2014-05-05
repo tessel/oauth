@@ -1,4 +1,4 @@
-var db = require('../database/model'),
+var db = require('../db/model'),
     User = db.User,
     bcrypt = require('bcrypt');
 
