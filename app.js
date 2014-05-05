@@ -21,7 +21,7 @@ var routes = {
   oauth: require('./routes/oauth')
 };
 
-var db = require('./db/model');
+var db = require('./models/index');
 
 var app = express();
 

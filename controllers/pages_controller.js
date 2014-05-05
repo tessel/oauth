@@ -1,4 +1,4 @@
-var db = require('../db/model'),
+var db = require('../models/index'),
     User = db.User;
 
 var PagesController = function(){ };
