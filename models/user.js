@@ -67,15 +67,16 @@ var User = function(sequelize, DataTypes){
       },
 
       genApiKey: function(){
-        var salt = bcrypt.genSaltSync(5);
+        var d = Date.now();
+        var apikey = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
-        var apiKey = bcrypt.hashSync(
-          Date.now().toString() +
-          this.username +
-          Math.random().toString()
-        , salt);
+        apikey = apikey.replace(/[xy]/g, function(c) {
+          var r = (d + Math.random() * 16) % 16 | 0;
+          d = Math.floor(d / 16);
+          return (c === 'x' ? r : (r&0x7|0x8)).toString(16);
+        });
 
-        this.apiKey = new Buffer(apiKey).toString('base64');
+        this.apiKey = apikey;
 
         return this;
       },
