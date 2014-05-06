@@ -1,9 +1,9 @@
-var db = require('../database/model'),
+var db = require('../models/index'),
     User = db.User;
 
-var AppController = function(){ };
+var ApplicationController = function(){};
 
-AppController.prototype.authenticateUser = function(req, res, next){
+ApplicationController.prototype.authenticateUser = function(req, res, next){
   if (req.session.userId){
     if (req.session.currentUser){
       next();
@@ -26,4 +26,4 @@ AppController.prototype.authenticateUser = function(req, res, next){
   }
 }
 
-module.exports = new AppController();
+module.exports = new ApplicationController();

@@ -10,13 +10,13 @@ bdd:
 	@$(BIN)/mocha --colors -R spec $(TEST_FILES)
 
 migrate:
-	@$(BIN)/sequelize --config ./config/database.js -m
+	@$(BIN)/sequelize --config ./config/database.js -p db/migrations -m
 
 migrate-rollback:
-	@$(BIN)/sequelize --config ./config/database.js -m -u
+	@$(BIN)/sequelize --config ./config/database.js -p db/migrations -m -u
 
 migration:
-	@$(BIN)/sequelize --config ./config/database.js -c $(NAME)
+	@$(BIN)/sequelize --config ./config/database.js -p db/migrations -c $(NAME)
 
 serve:
 	./bin/www

@@ -1,4 +1,4 @@
-var db = require('../database/model');
+var db = require('../models/index');
 
 db.User
   .create({
