@@ -5,12 +5,7 @@ var db = require('../models/index'),
 var SessionsController = function(){ };
 
 SessionsController.prototype.new = function(req, res, next) {
-  res.render('login', {
-    title: 'Login',
-    client_id: req.query.client_id,
-    redirect_uri: req.query.redirect_uri,
-    response_type: req.query.response_type
-  });
+  res.render('login');
 }
 
 SessionsController.prototype.create = function(req, res, next) {
@@ -21,26 +16,21 @@ SessionsController.prototype.create = function(req, res, next) {
     .find({ where: { username: username } })
 
     .error(function(err) {
-      console.log(err);
-      res.render('login', { title: 'Login' });
+      return res.redirect('/login');
     })
 
     .success(function(user) {
       if ((!user) || (!bcrypt.compareSync(password, user.passwordDigest))) {
-        return res.redirect('/login' + req._parsedUrl.search);
+        return res.redirect('/login');
       }
 
       req.session.userId = user.id;
       req.session.currentUser = user;
 
-      if (req.body.client_id && req.body.redirect_uri) {
-        return res.render('oauth/authorise', {
-          title: 'Authorize',
-          user: user,
-          client_id: req.body.client_id,
-          redirect_uri: req.body.redirect_uri,
-          response_type: req.body.response_type
-        });
+      if (req.session.originalUrl) {
+        var redirectUrl = req.session.originalUrl;
+        req.session.originalUrl = null;
+        return res.redirect(redirectUrl);
       }
 
       res.redirect("/users/" + user.id);
