@@ -1,4 +1,5 @@
-var db = require('../models/index'),
+var Sequelize = require('sequelize'),
+    db = require('../models/index'),
     bcrypt = require('bcrypt'),
     model = {};
 
@@ -148,5 +149,27 @@ model.getUser = function(username, password, callback) {
       callback(err, false);
     });
 };
+
+model.getUserFromClient = function(clientId, clientSecret, username, callback) {
+  db.Client
+    .find({ where: { clientId: clientId } })
+    .success(function(client) {
+      if (client && bcrypt.compareSync(clientSecret, client.clientSecretDigest)){
+        db.User
+          .find({ where: Sequelize.or({ username: username }, { apiKey: username }) })
+          .success(function(user) {
+            callback(null, user);
+          })
+          .error(function(err) {
+            callback(err, false);
+          })
+      }else{
+        callback(null, false);
+      }
+    })
+    .error(function(err) {
+      callback(err, false);
+    });
+}
 
 module.exports = model;
