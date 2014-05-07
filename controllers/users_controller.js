@@ -1,5 +1,6 @@
 var db = require('../models/index'),
-    User = db.User;
+    User = db.User,
+    AccessToken = db.AccessToken;
 
 var UsersController= function(){ };
 
@@ -30,20 +31,32 @@ UsersController.prototype.create = function(req, res, next){
 };
 
 UsersController.prototype.profile = function(req, res, next){
-  User
-    .find({ where: { id: req.params.id } })
+  var accessToken = req.query.access_token || req.body.access_token;
 
-    .success(function(user){
-      res.send(302, {
-        id: user.id,
-        username: user.username,
-        apiKey: user.apiKey,
-        name: user.name
-      });
+  AccessToken
+    .find({ where: { accessToken: accessToken } })
+
+    .success(function(token){
+      if (!token) return res.send(304, { error: { message: 'Invalid token.' } });
+
+      User
+        .find({ where: { id: token.userId } })
+        .success(function(user){
+          res.send({
+            username: user.username,
+            apiKey: user.apiKey,
+            name: user.name
+          });
+        })
+        .error(function(err){
+          console.log('ERROR:', err);
+          res.send(500, err);
+        });
     })
 
     .error(function(err){
-      res.send(err);
+      console.log('ERROR', err);
+      res.send(500, err);
     });
 };
 

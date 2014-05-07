@@ -14,7 +14,7 @@ module.exports = {
     // Creates a new User
     router.post('/', usersController.create);
 
-    router.get('/profiles/:id', oauth.authorise(), usersController.profile);
+    router.all('/profile', oauth.authorise(), usersController.profile);
 
     // GET /users/show
     //
