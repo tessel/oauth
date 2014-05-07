@@ -3,7 +3,7 @@ var db = require('../models/index'),
 
 var ApplicationController = function(){};
 
-ApplicationController.prototype.authenticateUser = function(req, res, next){
+ApplicationController.prototype.auth = function(req, res, next){
   var redirectToLogin = function(){
     req.session.originalUrl = req.originalUrl;
     req.session.currentUser = null;

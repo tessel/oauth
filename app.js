@@ -14,12 +14,7 @@ var express = require('express'),
 
 var oauthserver = require('node-oauth2-server');
 
-var routes = {
-  login: require('./routes/login'),
-  index: require('./routes/index'),
-  users: require('./routes/users'),
-  oauth: require('./routes/oauth')
-};
+var routes = require('./routes');
 
 var db = require('./models/index');
 
@@ -50,11 +45,8 @@ app.use(
   })
 );
 
-// Setup routes for OAuth and services.
-app.use('/oauth', routes.oauth.all(app.oauth));
-app.use('/',      routes.login);
-app.use('/',      routes.index.all(app.oauth));
-app.use('/users', routes.users.all(app.oauth));
+// Setup routes
+app.use('/', routes(app.oauth));
 
 // Setup and Sync Database and load models
 db.sequelize
