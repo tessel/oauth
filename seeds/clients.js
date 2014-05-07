@@ -6,7 +6,7 @@ db.Client
     clientSecret: 'the-hybrid-group',
     clientSecretConfirmation: 'the-hybrid-group',
     name: 'http://www.hybridgroup.com',
-    grantTypeAllowed: 'password|authorization_code|refresh_token',
+    grantTypeAllowed: 'password|authorization_code|refresh_token|client_credentials',
     redirectUri: 'http://hybridgroup.com'
   })
   .success(function(client){
@@ -22,7 +22,7 @@ db.Client
     clientSecret: 'the-tessel-cloud',
     clientSecretConfirmation: 'the-tessel-cloud',
     name: 'http://www.tessel-cloud.io',
-    grantTypeAllowed: 'password|authorization_code|refresh_token',
+    grantTypeAllowed: 'password|authorization_code|refresh_token|client_credentials',
     redirectUri: 'http://tessel.io'
   })
   .success(function(client){

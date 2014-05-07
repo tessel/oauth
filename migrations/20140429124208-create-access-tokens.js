@@ -26,7 +26,7 @@ module.exports = {
 
       expires: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: true
       },
 
       createdAt: DataTypes.DATE,

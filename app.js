@@ -24,7 +24,9 @@ var app = express();
 app.oauth = oauthserver({
   model: require('./models/oauth'),
   grants: ['password', 'authorization_code', 'refresh_token', 'client_credentials'],
-  debug: true
+  debug: true,
+  accessTokenLifetime: null,
+  refreshTokenLifetime: null
 });
 
 // view engine setup

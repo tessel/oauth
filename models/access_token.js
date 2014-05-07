@@ -4,7 +4,7 @@ var AccessToken = function(sequelize, DataTypes){
     accessToken: { type: DataTypes.TEXT, unique: true, allowNull: false },
     clientId: { type: DataTypes.STRING, allowNull: false },
     userId: { type: DataTypes.INTEGER, allowNull: false },
-    expires: { type: DataTypes.DATE, allowNull: false }
+    expires: { type: DataTypes.DATE, allowNull: true }
   });
 };
 
