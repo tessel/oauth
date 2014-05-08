@@ -150,19 +150,20 @@ model.getUser = function(username, password, callback) {
     });
 };
 
-model.getUserFromClient = function(clientId, clientSecret, username, callback) {
+// Required by client_credentials type
+model.getUserFromClient = function(clientId, clientSecret, params, callback) {
   db.Client
     .find({ where: { clientId: clientId } })
     .success(function(client) {
       if (client && bcrypt.compareSync(clientSecret, client.clientSecretDigest)){
         db.User
-          .find({ where: Sequelize.or({ username: username }, { apiKey: username }) })
+          .find({ where: Sequelize.or({ username: params.username }, { apiKey: params.api_key }) })
           .success(function(user) {
             callback(null, user);
           })
           .error(function(err) {
             callback(err, false);
-          })
+          });
       }else{
         callback(null, false);
       }
@@ -170,6 +171,26 @@ model.getUserFromClient = function(clientId, clientSecret, username, callback) {
     .error(function(err) {
       callback(err, false);
     });
+}
+
+// Required by extended_grant type
+model.extendedGrant = function(grantType, req, callback) {
+  if (req.method === 'GET') {
+    var params = req.query;
+  }else{
+    var params = req.body;
+  }
+
+  this.grantTypeAllowed(params.client_id, params.grant_type, function(err, allowed) {
+    db.User
+      .find({ where: { apiKey: params.api_key } })
+      .success(function(user) {
+        callback(null, allowed, user);
+      })
+      .error(function(dbErr) {
+        callback(dbErr, allowed, null);
+      });
+  });
 }
 
 module.exports = model;

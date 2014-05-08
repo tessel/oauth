@@ -23,7 +23,7 @@ var app = express();
 // Configure OAuth2 server
 app.oauth = oauthserver({
   model: require('./models/oauth'),
-  grants: ['password', 'authorization_code', 'refresh_token', 'client_credentials'],
+  grants: ['password', 'authorization_code', 'refresh_token','https://tessel-grant'],
   debug: true,
   accessTokenLifetime: null,
   refreshTokenLifetime: null
