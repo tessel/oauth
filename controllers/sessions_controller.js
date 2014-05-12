@@ -10,7 +10,8 @@ SessionsController.prototype.new = function(req, res, next) {
 
 SessionsController.prototype.create = function(req, res, next) {
   var username = req.body.username,
-      password = req.body.password;
+      password = req.body.password,
+      sessions = new SessionsController();
 
   User
     .find({ where: { username: username } })
@@ -24,7 +25,7 @@ SessionsController.prototype.create = function(req, res, next) {
         return res.redirect('/login');
       }
 
-      SessionsController.signIn(req, res, user);
+      sessions.signIn(req, res, user);
     });
 }
 
