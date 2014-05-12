@@ -1,6 +1,7 @@
 var db = require('../models/index'),
     User = db.User,
-    AccessToken = db.AccessToken;
+    AccessToken = db.AccessToken,
+    sessions = require('./sessions_controller.js');
 
 var UsersController= function(){ };
 
@@ -18,11 +19,11 @@ UsersController.prototype.create = function(req, res, next){
     .create(newUser)
 
     .success(function(user) {
-      req.session.userId = user.id;
-      res.redirect('/users/show');
+      sessions.signIn(req, res, user);
     })
 
     .error(function(err) {
+      console.log('ERROR:', err);
       res.render('users/new', {
         title: 'Register new user',
         user: req.body.user

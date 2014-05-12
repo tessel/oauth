@@ -24,16 +24,7 @@ SessionsController.prototype.create = function(req, res, next) {
         return res.redirect('/login');
       }
 
-      req.session.userId = user.id;
-      req.session.currentUser = user;
-
-      if (req.session.originalUrl) {
-        var redirectUrl = req.session.originalUrl;
-        req.session.originalUrl = null;
-        return res.redirect(redirectUrl);
-      }
-
-      res.redirect("/users/" + user.id);
+      SessionsController.signIn(req, res, user);
     });
 }
 
@@ -41,6 +32,20 @@ SessionsController.prototype.destroy = function(req, res, next) {
   req.session.userId = null;
   req.session.currentUser = null;
   res.redirect('/login');
+}
+
+SessionsController.prototype.signIn = function(req, res, user){
+  req.session.userId = user.id;
+  req.session.currentUser = user;
+
+  if (req.session.originalUrl) {
+    var redirectUrl = req.session.originalUrl;
+
+    req.session.originalUrl = null;
+    res.redirect(redirectUrl);
+  }else{
+    res.redirect("/users/" + user.id);
+  }
 }
 
 module.exports = new SessionsController();
