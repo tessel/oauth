@@ -45,6 +45,7 @@ UsersController.prototype.profile = function(req, res, next){
         .success(function(user){
           res.send({
             username: user.username,
+            email: user.email,
             apiKey: user.apiKey,
             name: user.name
           });
