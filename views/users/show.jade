@@ -5,6 +5,13 @@ block content
     .large-12.columns
       h2.subheader= title
   .panel
+    if errors.length > 0
+      .row
+        .large-12.columns
+          .alert-box.warning.radius
+            ul.disc
+              each err in errors
+                li= err.message
     .row
       .large-12.columns
           .row
@@ -29,6 +36,6 @@ block content
               p=user.apiKey
           .row
             .large-2.columns
-              a.button.alert.radius(href="/logout") logout
+              a.button.alert.radius(href='/logout') logout
             .large-10.columns
-              a.button.success.radius(href="/genApiKey") Re-generate API Key
+              a.button.success.radius(href='/users/' + user.id + '/genApiKey') Re-generate API Key
