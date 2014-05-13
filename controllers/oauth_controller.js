@@ -1,15 +1,15 @@
 var db = require('../models/index'),
     User = db.User;
 
-var OauthController = function() { };
+var OauthController = {};
 
-OauthController.prototype.createAuth = function(req, next) {
+OauthController.createAuth = function(req, next) {
   // TODO? Check scopes allowed by the user and create corresponging
   // permissions records.
   next(null, req.body.allow === 'yes', req.session.currentUser.id);
 }
 
-OauthController.prototype.newAuth = function(req, res, next){
+OauthController.newAuth = function(req, res, next){
   res.render('oauth/authorise', {
     title: 'Authorise access',
     response_type: req.query.response_type,
@@ -18,4 +18,4 @@ OauthController.prototype.newAuth = function(req, res, next){
   });
 }
 
-module.exports = new OauthController();
+module.exports = OauthController;

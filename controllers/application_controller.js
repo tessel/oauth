@@ -1,9 +1,9 @@
 var db = require('../models/index'),
     User = db.User;
 
-var ApplicationController = function(){};
+var ApplicationController = {};
 
-ApplicationController.prototype.auth = function(req, res, next){
+ApplicationController.auth = function(req, res, next){
   var redirectToLogin = function(){
     req.session.originalUrl = req.originalUrl;
     req.session.currentUser = null;
@@ -37,4 +37,4 @@ ApplicationController.prototype.auth = function(req, res, next){
   }
 }
 
-module.exports = new ApplicationController();
+module.exports = ApplicationController;

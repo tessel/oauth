@@ -2,16 +2,15 @@ var db = require('../models/index'),
     User = db.User,
     bcrypt = require('bcrypt');
 
-var SessionsController = function(){ };
+var SessionsController = {};
 
-SessionsController.prototype.new = function(req, res, next) {
+SessionsController.new = function(req, res, next) {
   res.render('login');
 }
 
-SessionsController.prototype.create = function(req, res, next) {
+SessionsController.create = function(req, res, next) {
   var username = req.body.username,
-      password = req.body.password,
-      sessions = new SessionsController();
+      password = req.body.password;
 
   User
     .find({ where: { username: username } })
@@ -25,17 +24,17 @@ SessionsController.prototype.create = function(req, res, next) {
         return res.redirect('/login');
       }
 
-      sessions.signIn(req, res, user);
+      SessionsController.signIn(req, res, user);
     });
 }
 
-SessionsController.prototype.destroy = function(req, res, next) {
+SessionsController.destroy = function(req, res, next) {
   req.session.userId = null;
   req.session.currentUser = null;
   res.redirect('/login');
 }
 
-SessionsController.prototype.signIn = function(req, res, user){
+SessionsController.signIn = function(req, res, user){
   req.session.userId = user.id;
   req.session.currentUser = user;
 
@@ -49,4 +48,4 @@ SessionsController.prototype.signIn = function(req, res, user){
   }
 }
 
-module.exports = new SessionsController();
+module.exports = SessionsController;
