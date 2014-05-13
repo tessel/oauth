@@ -6,8 +6,8 @@ var OauthController = {};
 OauthController.createAuth = function(req, next) {
   // TODO? Check scopes allowed by the user and create corresponging
   // permissions records.
-  next(null, req.body.allow === 'yes', req.session.currentUser.id);
-}
+  next(null, req.body.allow === 'yes', req.session.user.id);
+};
 
 OauthController.newAuth = function(req, res, next){
   res.render('oauth/authorise', {
@@ -16,6 +16,6 @@ OauthController.newAuth = function(req, res, next){
     client_id: req.query.client_id,
     redirect_uri: req.query.redirect_uri
   });
-}
+};
 
 module.exports = OauthController;

@@ -6,7 +6,7 @@ var SessionsController = {};
 
 SessionsController.new = function(req, res, next) {
   res.render('login');
-}
+};
 
 SessionsController.create = function(req, res, next) {
   var username = req.body.username,
@@ -26,17 +26,17 @@ SessionsController.create = function(req, res, next) {
 
       SessionsController.signIn(req, res, user);
     });
-}
+};
 
 SessionsController.destroy = function(req, res, next) {
   req.session.userId = null;
-  req.session.currentUser = null;
+  req.session.user = null;
   res.redirect('/login');
-}
+};
 
 SessionsController.signIn = function(req, res, user){
   req.session.userId = user.id;
-  req.session.currentUser = user;
+  req.session.user = user;
 
   if (req.session.originalUrl) {
     var redirectUrl = req.session.originalUrl;
@@ -46,6 +46,6 @@ SessionsController.signIn = function(req, res, user){
   }else{
     res.redirect("/users/" + user.id);
   }
-}
+};
 
 module.exports = SessionsController;

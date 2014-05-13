@@ -6,13 +6,13 @@ var ApplicationController = {};
 ApplicationController.auth = function(req, res, next){
   var redirectToLogin = function(){
     req.session.originalUrl = req.originalUrl;
-    req.session.currentUser = null;
+    req.session.user = null;
     req.session.userId = null;
     res.redirect('/login');
   }
 
   if (req.session.userId){
-    if (req.session.currentUser){
+    if (req.session.user){
       next();
     }else{
       User
@@ -20,7 +20,7 @@ ApplicationController.auth = function(req, res, next){
 
         .success(function(user) {
           if (user) {
-            req.session.currentUser = user;
+            req.session.user = user;
             next();
           }else {
             redirectToLogin();
@@ -35,6 +35,6 @@ ApplicationController.auth = function(req, res, next){
   }else{
     redirectToLogin();
   }
-}
+};
 
 module.exports = ApplicationController;

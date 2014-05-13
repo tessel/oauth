@@ -1,5 +1,4 @@
-var bcrypt = require('bcrypt'),
-    rest = require('restler');
+var bcrypt = require('bcrypt');
 
 var CLOUD_URI = process.env.CLOUD_URI;
 
@@ -38,18 +37,12 @@ var User = function(sequelize, DataTypes){
     hooks: {
       beforeValidate: function(user, next){
         user.digest();
-        user.genApiKey();
-        next();
+        next(null, user);
       },
 
-      // POSTs the User ID and API Key to Cloud so they can be used to control
-      // Tessels
-      afterCreate: function(user, next) {
-        var uri = CLOUD_URI + "/users",
-            data = { id: user.id, apiKey: user.apiKey };
-
-        rest.postJson(uri, data);
-        next();
+      beforeCreate: function(user, next){
+        user.genApiKey(null, user);
+        next(null, user);
       },
     },
 
@@ -79,13 +72,6 @@ var User = function(sequelize, DataTypes){
         this.apiKey = apikey;
 
         return this;
-      },
-
-      updateCloud: function() {
-        var uri = CLOUD_URI + "/users/" + this.id,
-            data = function() { apiKey: this.apiKey };
-
-        rest.putJson(uri, data);
       }
     },
 

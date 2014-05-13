@@ -3,7 +3,7 @@ var db = require('../models/index'),
     AccessToken = db.AccessToken,
     sessions = require('./sessions_controller.js');
 
-var UsersController= {};
+var UsersController = {};
 
 UsersController.new = function(req, res, next){
   res.render('users/new', {
@@ -59,7 +59,7 @@ UsersController.profile = function(req, res, next){
 
 UsersController.show = function(req, res, next){
   var errors = [],
-      user = req.session.currentUser;
+      user = req.session.user;
 
   if (user.id != req.params.id) {
     req.params.id = user.id;
@@ -75,6 +75,44 @@ UsersController.show = function(req, res, next){
   }else{
     return res.redirect('/login');
   }
-}
+};
+
+UsersController.genApiKey = function(req, res, next) {
+  var errors = [];
+
+  if (req.session.user.id != req.params.id) {
+    req.params.id = req.session.user.id;
+    errors.push({ message: 'You do not have sufficient permissions to access requested resource.' });
+  }
+
+  User
+    .find({ where: { id: req.session.user.id } })
+
+    .success(function(user) {
+      if (user){
+        user
+          .genApiKey()
+          .save()
+          .success(function() {
+            req.session.user = user;
+            res.redirect('/users/' + user.id);
+          })
+          .error(function() {
+            errors.push({ message: 'An error occured while updating user profile.' });
+            res.render('users/show', {
+              title: 'User Profile',
+              user: user,
+              errors: errors
+            });
+          });
+      }else{
+        return res.redirect('/login');
+      }
+    })
+
+    .error(function(err) {
+      return res.redirect('/login');
+    });
+};
 
 module.exports = UsersController;
