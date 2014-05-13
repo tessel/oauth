@@ -93,11 +93,8 @@ var UsersController= {
             .genApiKey()
             .save()
             .success(function() {
-              res.render('users/show', {
-                title: 'User Profile',
-                user: user,
-                errors: errors
-              });
+              req.session.user = user;
+              res.redirect('/users/' + user.id);
             })
             .error(function() {
               errors.push({ message: 'An error occured while updating user profile.' });
