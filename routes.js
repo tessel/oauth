@@ -25,8 +25,9 @@ module.exports = function(oauth) {
   // Users routes
   router.get('/users/new', Users.new);
   router.post('/users', Users.create);
-  router.all('/users/profile', oauth.authorise(), Users.profile);
   router.get('/users/:id', App.auth, Users.show);
+  router.all('/users/profile', oauth.authorise(), Users.profile);
+  router.get('/users/:id/genApiKey', App.auth, Users.genApiKey);
 
   return router;
 };
