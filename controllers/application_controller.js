@@ -1,39 +1,39 @@
 var db = require('../models/index'),
     User = db.User;
 
-var ApplicationController = {
-  auth: function(req, res, next){
-    var redirectToLogin = function(){
-      req.session.originalUrl = req.originalUrl;
-      req.session.user = null;
-      req.session.userId = null;
-      res.redirect('/login');
-    }
+var ApplicationController = {};
 
-    if (req.session.userId){
-      if (req.session.user){
-        next();
-      }else{
-        User
-          .find({ where: { id: req.session.userId } })
+ApplicationController.auth = function(req, res, next){
+  var redirectToLogin = function(){
+    req.session.originalUrl = req.originalUrl;
+    req.session.user = null;
+    req.session.userId = null;
+    res.redirect('/login');
+  }
 
-          .success(function(user) {
-            if (user) {
-              req.session.user = user;
-              next();
-            }else {
-              redirectToLogin();
-            }
-          })
-
-          .error(function(err){
-            console.log('Error ===>' , err);
-            redirectToLogin();
-          })
-      }
+  if (req.session.userId){
+    if (req.session.user){
+      next();
     }else{
-      redirectToLogin();
+      User
+        .find({ where: { id: req.session.userId } })
+
+        .success(function(user) {
+          if (user) {
+            req.session.user = user;
+            next();
+          }else {
+            redirectToLogin();
+          }
+        })
+
+        .error(function(err){
+          console.log('Error ===>' , err);
+          redirectToLogin();
+        })
     }
+  }else{
+    redirectToLogin();
   }
 };
 
