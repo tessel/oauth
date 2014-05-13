@@ -3,16 +3,16 @@ var db = require('../models/index'),
     AccessToken = db.AccessToken,
     sessions = require('./sessions_controller.js');
 
-var UsersController= function(){ };
+var UsersController= {};
 
-UsersController.prototype.new = function(req, res, next){
+UsersController.new = function(req, res, next){
   res.render('users/new', {
     title: 'Register new user',
     user: User.build(req.body.user)
   });
 };
 
-UsersController.prototype.create = function(req, res, next){
+UsersController.create = function(req, res, next){
   var newUser = req.body.user;
 
   User
@@ -31,7 +31,7 @@ UsersController.prototype.create = function(req, res, next){
     });
 };
 
-UsersController.prototype.profile = function(req, res, next){
+UsersController.profile = function(req, res, next){
   var accessToken = req.query.access_token || req.body.access_token;
 
   AccessToken
@@ -57,7 +57,7 @@ UsersController.prototype.profile = function(req, res, next){
     });
 };
 
-UsersController.prototype.show = function(req, res, next){
+UsersController.show = function(req, res, next){
   var errors = [],
       user = req.session.currentUser;
 
@@ -77,4 +77,4 @@ UsersController.prototype.show = function(req, res, next){
   }
 }
 
-module.exports = new UsersController();
+module.exports = UsersController;
