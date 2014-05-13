@@ -35,25 +35,20 @@ UsersController.prototype.profile = function(req, res, next){
   var accessToken = req.query.access_token || req.body.access_token;
 
   AccessToken
-    .find({ where: { accessToken: accessToken } })
+    .find({ where: { accessToken: accessToken }, include: [User] })
 
     .success(function(token){
       if (!token) return res.send(304, { error: { message: 'Invalid token.' } });
 
-      User
-        .find({ where: { id: token.userId } })
-        .success(function(user){
-          res.send({
-            username: user.username,
-            email: user.email,
-            apiKey: user.apiKey,
-            name: user.name
-          });
-        })
-        .error(function(err){
-          console.log('ERROR:', err);
-          res.send(500, err);
-        });
+      var user = token.user;
+
+      res.send({
+        username: user.username,
+        email: user.email,
+        apiKey: user.apiKey,
+        name: user.name
+      });
+
     })
 
     .error(function(err){

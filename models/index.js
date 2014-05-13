@@ -24,4 +24,11 @@ db['AccessToken'] = db.sequelize.import('../models/access_token');
 db['RefreshToken'] = db.sequelize.import('../models/refresh_token');
 db['AuthCode'] = db.sequelize.import('../models/auth_code');
 
+// define associations
+db.AccessToken.belongsTo(db.User, { foreignKey: 'userId' });
+db.AccessToken.belongsTo(db.Client, { foreignKey: 'clientId' });
+
+db.User.hasMany(db.AccessToken, { foreignKey: 'userId' });
+db.Client.hasMany(db.AccessToken, { foreignKey: 'clientId' });
+
 module.exports = db;
