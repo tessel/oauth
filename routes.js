@@ -23,10 +23,10 @@ module.exports = function(oauth) {
   router.get('/register', Pages.register);
 
   // Users routes
-  router.get('/users/new', Users.new);
   router.post('/users', Users.create);
-  router.get('/users/:id', App.auth, Users.show);
+  router.get('/users/new', Users.new);
   router.all('/users/profile', oauth.authorise(), Users.profile);
+  router.get('/users/:id', App.auth, Users.show);
   router.get('/users/:id/genApiKey', App.auth, Users.genApiKey);
 
   return router;
