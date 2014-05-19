@@ -1,4 +1,4 @@
-# Tessel Oauth server setup and config.
+# Tessel OAuth2 server: setup and config.
 ## DB setup
 
 First step is to setup the DB server, create a new DB and setup the db
@@ -11,7 +11,7 @@ config in the app.
    production, etc..), and setup the correct connection parameters, you
    can check a full list of this params in the /config/db.js file.
 
-   Example of `/config/database.js`
+   Example of `/config/db.js`
 
    ```javascript
    require('dotenv').load();
@@ -56,18 +56,18 @@ config in the app.
    now be able to run migrations to create the DB tables and update them
    as needed, just run the following command from the root folder:
 
-```
-$ make migrate
-```
+   ```
+   $ make migrate
+   ```
 
-You should see all the tables created and updated to the last migration.
+   You should see all the tables created and updated to the last migration.
 
 4. The final step is to create a couple of seeds for users and clients,
    just run:
 
-```
-$ node ./seeds/seed
-```
+   ```
+   $ node ./seeds/seed
+   ```
 
 With this the DB should be ready to go, next step session store.
 
@@ -85,9 +85,9 @@ store.
 3. Last step for session store is to actually run the redis server, just
    run:
 
-```
-$ redis-server
-```
+   ```
+   $ redis-server
+   ```
 
 ## Running the OAuth server app:
 
@@ -99,6 +99,6 @@ $ PORT=3002 npm start
 ```
 
 This is all the configuration you need to do to run the app, you should
-now be able to go to `http://127.0.0.1:3000/register` to create a new
+now be able to go to `http://127.0.0.1:3002/register` to create a new
 user, after you create a new user you can request the user profile using
 the `/users/profile` path and passing along the client apps creds.
