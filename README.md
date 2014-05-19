@@ -11,46 +11,46 @@ config in the app.
    production, etc..), and setup the correct connection parameters, you
    can check a full list of this params in the /config/db.js file.
 
-Example of `/config/database.js`
+   Example of `/config/database.js`
 
-```javascript
-require('dotenv').load();
+   ```javascript
+   require('dotenv').load();
 
-var host = process.env.DB_HOST || "127.0.0.1";
+   var host = process.env.DB_HOST || "127.0.0.1";
 
-module.exports = {
-  "development": {
-    "username": process.env.DB_USERNAME,
-    "password": process.env.DB_PASSWORD,
-    "database": "oauth_development",
-    "host": host,
-    "dialect": "postgres"
-  },
-  "test": {
-    "username": process.env.DB_USERNAME,
-    "password": process.env.DB_PASSWORD,
-    "database": "oauth_test",
-    "host": host,
-    "dialect": "postgres"
-  },
-  "production": {
-    "username": process.env.DB_USERNAME,
-    "password": process.env.DB_PASSWORD,
-    "database": "oauth_production",
-    "host": host,
-    "dialect": "postgres"
-  }
-}
-```
+   module.exports = {
+     "development": {
+       "username": process.env.DB_USERNAME,
+       "password": process.env.DB_PASSWORD,
+       "database": "oauth_development",
+       "host": host,
+       "dialect": "postgres"
+     },
+     "test": {
+       "username": process.env.DB_USERNAME,
+       "password": process.env.DB_PASSWORD,
+       "database": "oauth_test",
+       "host": host,
+       "dialect": "postgres"
+     },
+     "production": {
+       "username": process.env.DB_USERNAME,
+       "password": process.env.DB_PASSWORD,
+       "database": "oauth_production",
+       "host": host,
+       "dialect": "postgres"
+     }
+   }
+   ```
 
-As you can see in the example above the actual values for the DB
-connection are pulled from a `.env` file that you need to create, you
-can just copy the `.env.example` file and substitute the actual values
-like DB host, username and password:
+   As you can see in the example above the actual values for the DB
+   connection are pulled from a `.env` file that you need to create, you
+   can just copy the `.env.example` file and substitute the actual values
+   like DB host, username and password:
 
-```
-$ cp .env.example .env
-```
+   ```
+   $ cp .env.example .env
+   ```
 
 3. If everything was successfully installed and configured you should
    now be able to run migrations to create the DB tables and update them
