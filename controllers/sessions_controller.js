@@ -45,7 +45,7 @@ SessionsController.signIn = function(req, res, user){
     req.session.originalUrl = null;
     res.redirect(redirectUrl);
   }else{
-    res.redirect("/users/" + user.id);
+    res.redirect("/user");
   }
 };
 
