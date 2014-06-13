@@ -16,6 +16,9 @@ module.exports = function(oauth) {
   router.get('/login', Sessions.new);
   router.post('/login', Sessions.create);
   router.get('/signup', Users.new);
+  router.get('/reset', Users.resetForm);
+  router.post('/reset', Users.reset);
+  router.post('/resetPassword', Users.resetPassword);
   router.all('/logout', Sessions.destroy);
 
   // Index routes

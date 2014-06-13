@@ -9,7 +9,9 @@ var User = function(sequelize, DataTypes){
     email: { type: DataTypes.STRING, unique: true, allowNull: false },
     name: { type: DataTypes.STRING },
     passwordDigest: { type: DataTypes.STRING, allowNull: false },
-    apiKey: { type: DataTypes.STRING, unique: true, allowNull: true }
+    apiKey: { type: DataTypes.STRING, unique: true, allowNull: true },
+    resetKey: { type: DataTypes.STRING, unique: true, allowNull: true, defaultValue: null},
+    resetExpire: {type: DataTypes.DATE}
   }, {
     validate: {
       password: function(next) {
@@ -31,7 +33,13 @@ var User = function(sequelize, DataTypes){
 
     setterMethods: {
       password: function(value){ this._password = value; },
-      passwordConfirmation: function(value){ this._passwordConfirmation = value; }
+      passwordConfirmation: function(value){ this._passwordConfirmation = value; },
+      reset: function(value) {
+        this.resetKey = value;
+        var tenMinLater = new Date();
+        tenMinLater.setMinutes(tenMinLater.getMinutes() + 20);
+        this.resetExpire = tenMinLater.toISOString();
+      }
     },
 
     hooks: {
@@ -43,7 +51,7 @@ var User = function(sequelize, DataTypes){
       beforeCreate: function(user, next){
         user.genApiKey(null, user);
         next(null, user);
-      },
+      }
     },
 
     instanceMethods: {

@@ -1,7 +1,18 @@
-var db = require('../models/index'),
-    User = db.User,
-    AccessToken = db.AccessToken,
-    sessions = require('./sessions_controller.js');
+var db = require('../models/index')
+    , User = db.User
+    , AccessToken = db.AccessToken
+    , sessions = require('./sessions_controller.js')
+    , email = require('../utils/email')
+    , usersApp = require('express')()
+    , path = require('path')
+    , crypto = require('crypto')
+    , Sequelize = require('sequelize')
+    , fs = require('fs')
+    ;
+
+// change view directory to emails
+usersApp.set('views', path.resolve(__dirname,'../emails'));
+usersApp.set('view engine', 'jade');
 
 var UsersController = {};
 
@@ -12,12 +23,132 @@ UsersController.new = function(req, res, next){
   });
 };
 
+UsersController.resetForm = function(req, res, next){
+  var key = req.query.key;
+  if (!key)
+    return res.redirect('/login');
+
+  return res.render("users/reset", {resetKey: key});
+}
+
+UsersController.reset = function(req, res, next){
+  // find user with that reset key
+  var key = req.query.key;
+  console.log("param key", key);
+  if (!key) {
+    return res.redirect('/login');
+  }
+
+  var password = req.body.password;
+  if (!password) {
+    return res.render("users/reset", {resetKey: key, errors: ['password']});
+  }
+
+  console.log("new date", new Date());
+  User
+    .find({where: {resetKey: key, resetExpire: {
+        gte: new Date().toISOString()
+      }
+    }})
+    .success(function(user) {
+      if (!user) {
+        return res.render('users/reset', {failure: "This reset key has expired"});
+      }
+
+      user.password = password;
+      user.passwordConfirmation = password;
+      user.resetKey = null;
+
+      user.digest()
+        .save()
+        .success(function(){
+          console.log("success, setting session");
+          req.session.userId = user.id;
+          req.session.user = user;
+          
+          return res.redirect("/users/" + user.id);
+        })
+        .error(function(err){
+          console.log("Error: user/reset", err);
+          return res.render('users/reset', {ourfault: true});
+        });
+    })
+    .error(function(err) {
+      console.log("Error: user/reset", err);
+      return res.render('users/reset', {errors: ['badRequest']})
+    })
+    ;
+}
+
+UsersController.resetPassword = function (req, res, next){
+  // reset the user's password to a random string
+  // sends an email via mandrill
+  var username = req.body.username;
+  if (!username) return res.send({errors: ['username']});
+
+  User
+    .find({where: 
+      Sequelize.or({email: username }
+        , {username: username}), limit: 1})
+    .success(function(user) {
+      console.log("got user", user);
+      // generate secret key for password reset
+      crypto.randomBytes(20, function(err, buf) {
+        if (err) {
+          // something is really wrong, we should email ourselves...
+          email.sendError(err);
+          return {errors: null, ourfault: true};
+        } 
+
+        var token = buf.toString('hex');
+        
+        var recoverURL = process.env.BASE_URL+'reset?key='+token;
+        usersApp.render('recoverPassword', {user: user, link: recoverURL}, function(err, html){
+          if (err) {
+            email.sendError(err);
+            return res.send({errors: null, ourfault: true});
+          }
+
+          var plainText = email.list.recoverPassword.plain;
+          var subj = email.list.recoverPassword.subject;
+           
+          var re = new RegExp(/\[link\]/g);
+          var updated_plain = plainText.replace(re, recoverURL);
+          re = new RegExp(/\[username\]/g);
+          updated_plain = updated_plain.replace(re, user.username);
+
+          user.reset = token;
+          user.save()
+            .success(function(){
+              email.sendMail([user], subj, updated_plain, html, function (err){
+                if (err) {
+                  email.sendError(err);
+                  return res.send({errors: null, ourfault: true});
+                } 
+                // we're done                    
+                return res.send({errors: null, sentEmail: true});
+              });
+            })
+            .error(function(err){
+              console.log("Error: user/resetPassword user.save", err);
+              return res.send({errors: null, ourfault: true});
+            });
+
+        });
+      });
+    })
+    .error(function (err) {
+      // we're done
+      return res.send({errors: null, sentEmail: true});
+    })
+    ;
+}
+
 UsersController.create = function(req, res, next){
   var newUser = req.body.user;
 
   User
     .create(newUser)
-
     .success(function(user) {
       sessions.signIn(req, res, user);
     })
