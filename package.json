@@ -2,38 +2,33 @@
   "name": "tessel-oauth",
   "version": "0.0.1",
   "private": true,
-
   "scripts": {
     "start": "node ./bin/www"
   },
-
   "devDependencies": {
     "sinon-chai": "2.5.0",
-    "chai":       "1.9.1",
-    "mocha":      "1.18.2",
-    "sinon":      "1.9.1"
+    "chai": "1.9.1",
+    "mocha": "1.18.2",
+    "sinon": "1.9.1"
   },
-
   "dependencies": {
     "express": "4.0.0",
     "node-oauth2-server": "2.1.0",
-
     "static-favicon": "1.0.0",
-    "morgan":         "1.0.0",
-    "cookie-parser":  "1.0.1",
-    "body-parser":    "1.0.0",
-
-    "debug":          "0.7.4",
-    "dotenv":         "0.2.8",
-
-    "jade":           "1.3.0",
-    "stylus":         "0.42.3",
-
-    "pg":             "3.0.3",
-    "sequelize":      "2.0.0-dev11",
-    "bcrypt":         "0.7.8",
-    "express-session":"1.0.4",
-    "connect-redis":  "2.0.0",
-    "restler":        "3.2.2"
+    "morgan": "1.0.0",
+    "cookie-parser": "1.0.1",
+    "body-parser": "1.0.0",
+    "debug": "0.7.4",
+    "dotenv": "0.2.8",
+    "jade": "1.3.0",
+    "stylus": "0.42.3",
+    "pg": "3.0.3",
+    "sequelize": "2.0.0-dev11",
+    "bcrypt": "0.7.8",
+    "express-session": "1.0.4",
+    "connect-redis": "2.0.0",
+    "restler": "3.2.2",
+    "mandrill-api": "~1.0.39",
+    "nodemailer": "~0.6.5"
   }
 }
