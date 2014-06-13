@@ -91,7 +91,6 @@ UsersController.resetPassword = function (req, res, next){
       Sequelize.or({email: username }
         , {username: username}), limit: 1})
     .success(function(user) {
-      console.log("got user", user);
       // generate secret key for password reset
       crypto.randomBytes(20, function(err, buf) {
         if (err) {

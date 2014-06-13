@@ -1,5 +1,6 @@
 var db = require('../models/index'),
     User = db.User,
+    Sequelize = require('sequelize'),
     bcrypt = require('bcrypt');
 
 var SessionsController = {};
@@ -13,12 +14,12 @@ SessionsController.create = function(req, res, next) {
       password = req.body.password;
 
   User
-    .find({ where: { username: username } })
-
+    .find({ where:
+      Sequelize.or({email: username }
+        , {username: username}) })
     .error(function(err) {
       return res.redirect('/login');
     })
-
     .success(function(user) {
       if ((!user) || (!bcrypt.compareSync(password, user.passwordDigest))) {
         return res.redirect('/login');
