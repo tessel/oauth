@@ -6,21 +6,21 @@ module.exports = {
   "development": {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "oauth_development",
+    "database": process.env.DB_DEVELOPMENT,
     "host": host,
     "dialect": "postgres"
   },
   "test": {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "oauth_test",
+    "database": process.env.DB_TEST,
     "host": host,
     "dialect": "postgres"
   },
   "production": {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "oauth_production",
+    "database": process.env.DB_PRODUCTION,
     "host": host,
     "dialect": "postgres"
   }

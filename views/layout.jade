@@ -5,13 +5,38 @@ html(lang='en', class='no-js')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title= title
 
+    link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/normalize.css')
     link(rel='stylesheet', href='/stylesheets/foundation.min.css')
 
     script(src='/javascripts/vendor/modernizr.js')
+    block head
+
   body
+    .row
+      .large-12.columns
+        #error Something went wrong in our system. Please notify team@technical.io.
+
     block content
     script(src='/javascripts/vendor/jquery.js')
     script(src='/javascripts/foundation.min.js')
     script
       | $(document).foundation();
+
+    block scripts
+
+  if errors
+    script.
+      $(document).ready(function(){
+        // check error messages
+        var errors = !{JSON.stringify(errors)};
+        errors.forEach(function(error){
+          var invalid = $('<small class="error">Required field</small>');
+          $('[name="'+error+'"').after(invalid);
+        });
+      });
+  if ourfault
+    script.
+      $(document).ready(function(){
+        $('#error').show();
+      });

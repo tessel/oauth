@@ -5,7 +5,7 @@ block content
     .large-12.columns
       h2.subheader Login
   .panel
-    form.custom(name='authorise', action='/login', method='post')
+    form#authorise.custom(name='authorise', action='/login', method='post')
       .row
         .large-6.columns.end
           label Username
@@ -15,7 +15,12 @@ block content
           label Password
             input(name='password', type='password', placeholder='password')
       .row
-        .large-4.columns.end
+        .large-3.columns.end
           button.radius(type='submit') login
-        .large-2.columns.end
+        .large-2.columns
+          a#forgot-password.right(href="#") forgot password?
+        .large-1.columns.end
           a.right(href='/signup') sign up
+
+block scripts
+  script(src='/javascripts/custom/recover.js')

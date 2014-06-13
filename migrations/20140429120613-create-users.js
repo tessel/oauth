@@ -35,6 +35,15 @@ module.exports = {
         allowNull: false
       },
 
+      resetKey: {
+        type: DataTypes.STRING,
+        unique: true
+      },
+
+      resetExpire: {
+        type: DataTypes.DATE
+      },
+
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
     });
