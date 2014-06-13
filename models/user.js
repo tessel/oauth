@@ -11,7 +11,8 @@ var User = function(sequelize, DataTypes){
     passwordDigest: { type: DataTypes.STRING, allowNull: false },
     apiKey: { type: DataTypes.STRING, unique: true, allowNull: true },
     resetKey: { type: DataTypes.STRING, unique: true, allowNull: true, defaultValue: null},
-    resetExpire: {type: DataTypes.DATE}
+    resetExpire: {type: DataTypes.DATE},
+    accessToken: { type: DataTypes.STRING, unique: true }
   }, {
     validate: {
       password: function(next) {
@@ -62,6 +63,8 @@ var User = function(sequelize, DataTypes){
 
         if ((pass != null) && (pass != '') && (pass === conf)){
           this.passwordDigest = bcrypt.hashSync(this._password, salt);
+        } else if (this.accessToken != null) {
+          this.passwordDigest = bcrypt.hashSync(this.accessToken, salt);          
         }
 
         return this;

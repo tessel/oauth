@@ -44,6 +44,10 @@ module.exports = {
         type: DataTypes.DATE
       },
 
+      accessToken: {
+        type: DataTypes.STRING
+      }
+
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
     });

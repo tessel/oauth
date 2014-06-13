@@ -7,6 +7,15 @@ block content
   .panel
     form#authorise.custom(name='authorise', action='/login', method='post')
       .row
+        .large-3.columns
+          a#google(href="/auth/google" class="button expand secondary [radius round]")
+            i.fa.fa-google
+            | &nbsp; Login with Google
+        .large-3.columns.end
+          a#github(href="/auth/github", class="button expand secondary [radius round]") 
+            i.fa.fa-github
+            | &nbsp; Login with Github
+      .row
         .large-6.columns.end
           label Username or Email
             input(name='username', type='text', placeholder='username')
