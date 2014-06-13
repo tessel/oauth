@@ -15,7 +15,15 @@ html(lang='en', class='no-js')
   body
     .row
       .large-12.columns
-        #error Something went wrong in our system. Please notify team@technical.io.
+        .alert-box.alert.radius#error Something went wrong in our system. Please notify team@technical.io.
+    if failure
+      .row
+        .large-12.columns
+          .alert-box.alert.radius #{failure}
+    if success
+      .row
+        .large-12.columns
+          .alert-box.success.radius #{success}
 
     block content
     script(src='/javascripts/vendor/jquery.js')
