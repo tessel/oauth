@@ -16,6 +16,7 @@ module.exports = function(oauth) {
   router.get('/login', Sessions.new);
   router.post('/login', Sessions.create);
   router.get('/signup', Users.new);
+  router.post('/signup', Users.create);
   router.get('/reset', Users.resetForm);
   router.post('/reset', Users.reset);
   router.post('/resetPassword', Users.resetPassword);
@@ -26,7 +27,6 @@ module.exports = function(oauth) {
   router.get('/register', Pages.register);
 
   // Users routes
-  router.post('/users', Users.create);
   router.get('/users/new', Users.new);
   router.all('/users/profile', oauth.authorise(), Users.profile);
   router.get('/users/:id', App.auth, Users.show);

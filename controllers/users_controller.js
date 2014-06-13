@@ -125,7 +125,7 @@ UsersController.resetPassword = function (req, res, next){
                   return res.send({errors: null, ourfault: true});
                 } 
                 // we're done                    
-                return res.send({errors: null, sentEmail: true});
+                return res.send({errors: null, success: 'Password recovery email to '+username+' sent!'});
               });
             })
             .error(function(err){
@@ -138,7 +138,7 @@ UsersController.resetPassword = function (req, res, next){
     })
     .error(function (err) {
       // we're done
-      return res.send({errors: null, sentEmail: true});
+      return res.send({errors: null, success: 'Password recovery email to '+username+' sent!'});
     })
     ;
 }
@@ -146,17 +146,44 @@ UsersController.resetPassword = function (req, res, next){
 UsersController.create = function(req, res, next){
   var newUser = req.body.user;
 
+  var required = ['username', 'email', 'name', 'password', 'passwordConfirmation'];
+  var errs = [];
+  required.forEach(function(field){
+    if (!req.body.user[field]) errs.push('user['+field+']');
+  });
+
+  if (req.body.user.password.length < 8) {
+    return res.render('users/new', 
+      { title: 'Register new user', 
+        user: req.body.user, 
+        failure: "Password needs to be at least 8 characters long."});
+  }
+
+  if (req.body.user.password != req.body.user.passwordConfirmation) {
+    return res.render('users/new', 
+      { title: 'Register new user', 
+        user: req.body.user, 
+        failure: "Passwords don't match."});
+  } 
+
+  if (errs.length > 0) {
+    return res.render('users/new', 
+    { title: 'Register new user', 
+      user: req.body.user, 
+      errors: errs});
+  }
+    
   User
     .create(newUser)
     .success(function(user) {
       sessions.signIn(req, res, user);
     })
-
     .error(function(err) {
       console.log('ERROR:', err);
       res.render('users/new', {
         title: 'Register new user',
-        user: req.body.user
+        user: req.body.user,
+        failure: err
       });
     });
 };
