@@ -21,9 +21,14 @@ block content
               p=user.username
           .row
             .large-2.columns.text-right
-              label email:
+              label Email:
             .large-10.columns
               p=user.email
+          .row
+            .large-2.columns.text-right
+              label Password:
+            .large-10.columns
+              a#forgot-password.button.small.normalText(href="#") Reset Password
           .row
             .large-2.columns.text-right
               label Name:
@@ -38,4 +43,7 @@ block content
             .large-2.columns
               a.button.alert.radius(href='/logout') logout
             .large-10.columns
-              a.button.success.radius(href='/users/' + user.id + '/genApiKey') Re-generate API Key
+              a.button.success.radius(href='/users/genApiKey') Re-generate API Key
+
+block scripts
+  script(src='/javascripts/custom/recover.js')

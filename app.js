@@ -4,13 +4,15 @@ process.env.NODE_ENV = process.env.NODE_ENV || "development";
 
 var path = require('path');
 
-var express = require('express'),
-    session = require('express-session'),
-    RedisStore = require('connect-redis')(session),
-    favicon = require('static-favicon'),
-    logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser');
+var express = require('express')
+    , session = require('express-session')
+    , RedisStore = require('connect-redis')(session)
+    , favicon = require('static-favicon')
+    , logger = require('morgan')
+    , cookieParser = require('cookie-parser')
+    , bodyParser = require('body-parser')
+    , passport = require('passport')
+    ;
 
 var oauthserver = require('node-oauth2-server');
 
@@ -46,6 +48,9 @@ app.use(
     store: new RedisStore()
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Setup routes
 app.use('/', routes(app.oauth));

@@ -34,7 +34,7 @@ UsersController.resetForm = function(req, res, next){
 UsersController.reset = function(req, res, next){
   // find user with that reset key
   var key = req.query.key;
-  console.log("param key", key);
+  // console.log("param key", key);
   if (!key) {
     return res.redirect('/login');
   }
@@ -66,7 +66,7 @@ UsersController.reset = function(req, res, next){
           req.session.userId = user.id;
           req.session.user = user;
           
-          return res.redirect("/users/" + user.id);
+          return res.redirect("/user");
         })
         .error(function(err){
           console.log("Error: user/reset", err);
@@ -83,7 +83,12 @@ UsersController.reset = function(req, res, next){
 UsersController.resetPassword = function (req, res, next){
   // reset the user's password to a random string
   // sends an email via mandrill
+
   var username = req.body.username;
+  if (req.session.user) {
+    username = req.session.user.username;
+  }
+  
   if (!username) return res.send({errors: ['username']});
 
   User
@@ -146,46 +151,54 @@ UsersController.resetPassword = function (req, res, next){
 UsersController.create = function(req, res, next){
   var newUser = req.body.user;
 
+  function renderErr(results){
+    results.title = 'Register new user';
+    results.user = req.body.user;
+    res.render('users/new', results);
+  }
+
   var required = ['username', 'email', 'name', 'password', 'passwordConfirmation'];
   var errs = [];
   required.forEach(function(field){
-    if (!req.body.user[field]) errs.push('user['+field+']');
+    if (!newUser[field]) errs.push('user['+field+']');
   });
 
-  if (req.body.user.password.length < 8) {
-    return res.render('users/new', 
-      { title: 'Register new user', 
-        user: req.body.user, 
-        failure: "Password needs to be at least 8 characters long."});
+  if (newUser.password.length < 8) {
+    return renderErr({failure: "Password needs to be at least 8 characters long."});
   }
 
-  if (req.body.user.password != req.body.user.passwordConfirmation) {
-    return res.render('users/new', 
-      { title: 'Register new user', 
-        user: req.body.user, 
-        failure: "Passwords don't match."});
+  if (newUser.password != newUser.passwordConfirmation) {
+    return renderErr({failure: "Passwords don't match."});
   } 
 
   if (errs.length > 0) {
-    return res.render('users/new', 
-    { title: 'Register new user', 
-      user: req.body.user, 
-      errors: errs});
+    return renderErr({errors: errs});
   }
-    
+
+  // see if any user has the same email
   User
-    .create(newUser)
-    .success(function(user) {
-      sessions.signIn(req, res, user);
+    .find({ where: Sequelize.or({email: newUser.email }
+        , {username: newUser.username}) })
+    .success(function(user){
+      if (user) {
+        // email already exists in db
+        return renderErr({failure: "Email and username must be unique"});
+      }
+
+       User
+        .create(newUser)
+        .success(function(user) {
+          sessions.signIn(req, res, user);
+        })
+        .error(function(err) {
+          renderErr({failure: err});
+        });
+
     })
     .error(function(err) {
-      console.log('ERROR:', err);
-      res.render('users/new', {
-        title: 'Register new user',
-        user: req.body.user,
-        failure: err
-      });
+      renderErr({failure: err});
     });
+ 
 };
 
 UsersController.profile = function(req, res, next){
@@ -218,11 +231,6 @@ UsersController.show = function(req, res, next){
   var errors = [],
       user = req.session.user;
 
-  if (user.id != req.params.id) {
-    req.params.id = user.id;
-    errors.push({ message: 'You do not have sufficient permissions to access requested resource.' });
-  }
-
   if (user){
     res.render('users/show', {
       title: 'User Profile',
@@ -237,11 +245,6 @@ UsersController.show = function(req, res, next){
 UsersController.genApiKey = function(req, res, next) {
   var errors = [];
 
-  if (req.session.user.id != req.params.id) {
-    req.params.id = req.session.user.id;
-    errors.push({ message: 'You do not have sufficient permissions to access requested resource.' });
-  }
-
   User
     .find({ where: { id: req.session.user.id } })
 
@@ -252,7 +255,7 @@ UsersController.genApiKey = function(req, res, next) {
           .save()
           .success(function() {
             req.session.user = user;
-            res.redirect('/users/' + user.id);
+            res.redirect('/user');
           })
           .error(function() {
             errors.push({ message: 'An error occured while updating user profile.' });

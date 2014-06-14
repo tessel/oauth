@@ -1,10 +1,12 @@
 var router = require('express').Router();
 
-var App = require('./controllers/application_controller'),
-    OAuth = require('./controllers/oauth_controller'),
-    Sessions = require('./controllers/sessions_controller'),
-    Pages = require('./controllers/pages_controller'),
-    Users = require('./controllers/users_controller');
+var App = require('./controllers/application_controller')
+    , OAuth = require('./controllers/oauth_controller')
+    , Sessions = require('./controllers/sessions_controller')
+    , Pages = require('./controllers/pages_controller')
+    , Users = require('./controllers/users_controller')
+    , passport = require('passport')
+    ;
 
 module.exports = function(oauth) {
   // OAuth routes
@@ -23,14 +25,24 @@ module.exports = function(oauth) {
   router.all('/logout', Sessions.destroy);
 
   // Index routes
-  router.get('/', Pages.index);
+  // router.get('/', Pages.index);
+  router.all('/', App.auth, Users.show);
   router.get('/register', Pages.register);
 
   // Users routes
   router.get('/users/new', Users.new);
   router.all('/users/profile', oauth.authorise(), Users.profile);
-  router.get('/users/:id', App.auth, Users.show);
-  router.get('/users/:id/genApiKey', App.auth, Users.genApiKey);
+  router.get('/user', App.auth, Users.show);
+  router.get('/users/genApiKey', App.auth, Users.genApiKey);
+
+  // Github Auth Routes
+  router.get('/auth/github', passport.authenticate('github'), App.oauth);
+  router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), App.callbackAuth)
+
+  // Google Auth Routes
+  router.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
+                                            'https://www.googleapis.com/auth/userinfo.email'], accessType: 'offline'  }), App.oauth);
+  router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), App.callbackAuth);
 
   return router;
 };
