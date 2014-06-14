@@ -34,7 +34,7 @@ UsersController.resetForm = function(req, res, next){
 UsersController.reset = function(req, res, next){
   // find user with that reset key
   var key = req.query.key;
-  console.log("param key", key);
+  // console.log("param key", key);
   if (!key) {
     return res.redirect('/login');
   }
@@ -83,7 +83,12 @@ UsersController.reset = function(req, res, next){
 UsersController.resetPassword = function (req, res, next){
   // reset the user's password to a random string
   // sends an email via mandrill
+
   var username = req.body.username;
+  if (req.session.user) {
+    username = req.session.user.username;
+  }
+  
   if (!username) return res.send({errors: ['username']});
 
   User

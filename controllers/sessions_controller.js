@@ -6,6 +6,7 @@ var db = require('../models/index'),
 var SessionsController = {};
 
 SessionsController.new = function(req, res, next) {
+  if (req.session.user) return res.redirect('/user');
   res.render('login');
 };
 
