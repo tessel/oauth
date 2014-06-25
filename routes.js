@@ -49,5 +49,8 @@ module.exports = function(oauth) {
   // sso auth routes
   router.get('/sso/discourse', SSO.discourse);
   router.get('/sso/portal', SSO.portal);
+
+  // sso auth logout routes
+  router.get('/sso/logout', SSO.logout);
   return router;
 };

@@ -57,7 +57,6 @@ SessionsController.signIn = function(req, res, user){
   } else if (req.session.originalUrl) {
     var redirectUrl = req.session.originalUrl;
 
-    console.log("original redirect", redirectUrl);
     req.session.originalUrl = null;
     return res.redirect(redirectUrl);
   } else {

@@ -24,9 +24,15 @@ SSOController.discourse = function (req, res){
     , process.env.DISCOURSE_REDIRECT, process.env.DISCOURSE_CALLBACK_URL);
 }
 
-SSOController.portal = function (req, res, next){
+SSOController.portal = function (req, res){
   ssoGenerate(req, res, process.env.PORTAL_SSO_SECRET
     , process.env.PORTAL_REDIRECT, process.env.PORTAL_CALLBACK_URL);
+}
+
+SSOController.logout = function(req, res){
+  req.session.destroy();
+  var redirect = req.query.redirect;
+  return res.redirect(redirect);
 }
 
 module.exports = SSOController;
