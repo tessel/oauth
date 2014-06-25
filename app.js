@@ -45,7 +45,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    store: new RedisStore()
+    store: new RedisStore(),
+    name: "tessel-oauth.sid"
   })
 );
 

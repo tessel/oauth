@@ -6,6 +6,7 @@ var App = require('./controllers/application_controller')
     , Pages = require('./controllers/pages_controller')
     , Users = require('./controllers/users_controller')
     , passport = require('passport')
+    , SSO = require('./controllers/sso_controller')
     ;
 
 module.exports = function(oauth) {
@@ -44,5 +45,9 @@ module.exports = function(oauth) {
                                             'https://www.googleapis.com/auth/userinfo.email'], accessType: 'offline'  }), App.oauth);
   router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), App.callbackAuth);
 
+
+  // sso auth routes
+  router.get('/sso/discourse', SSO.discourse);
+  router.get('/sso/portal', SSO.portal);
   return router;
 };
