@@ -11,7 +11,11 @@ SessionsController.new = function(req, res, next) {
   if (req.session.user) {
     return res.redirect('/user');
   }
-  res.render('login');
+  var args = {};
+  if (req.query.err) {
+    args['loginErr'] = "The username/password did not match";
+  }
+  res.render('login', args);
 };
 
 SessionsController.create = function(req, res, next) {
@@ -23,24 +27,26 @@ SessionsController.create = function(req, res, next) {
       Sequelize.or({email: username }
         , {username: username}) })
     .error(function(err) {
-      return res.redirect('/login');
+      return res.redirect('/login/?err=login');
     })
     .success(function(user) {
       if ((!user) || (!bcrypt.compareSync(password, user.passwordDigest))) {
-        return res.redirect('/login');
+        return res.redirect('/login/?err=login');
       }
 
-      SessionsController.signIn(req, res, user);
+      SessionsController.signIn(req, res, user, next);
     });
 };
 
 SessionsController.destroy = function(req, res, next) {
   req.session.userId = null;
   req.session.user = null;
+  req.session.sso_secret = null;
+  req.session.nonce = null;
   res.redirect('/login');
 };
 
-SessionsController.signIn = function(req, res, user){
+SessionsController.signIn = function(req, res, user, next){
   req.session.userId = user.id;
   req.session.user = user;
 
@@ -52,7 +58,7 @@ SessionsController.signIn = function(req, res, user){
     req.session.redirect = null;
     req.session.sso_secret = null;
     req.session.nonce = null;
-    
+
     res.redirect(redirect+query);
   } else if (req.session.originalUrl) {
     var redirectUrl = req.session.originalUrl;
@@ -60,7 +66,7 @@ SessionsController.signIn = function(req, res, user){
     req.session.originalUrl = null;
     return res.redirect(redirectUrl);
   } else {
-    res.redirect("/user");
+    next();
   }
 };
 

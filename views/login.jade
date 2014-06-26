@@ -19,10 +19,14 @@ block content
         .large-6.columns.end
           label Username or Email
             input(name='username', type='text', placeholder='username')
+          if loginErr
+            small.error #{loginErr}
       .row
         .large-6.columns.end
           label Password
             input(name='password', type='password', placeholder='password')
+          if loginErr
+            small.error #{loginErr}
       .row
         .large-3.columns.end
           button.radius(type='submit') login

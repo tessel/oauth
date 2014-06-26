@@ -44,7 +44,7 @@ UsersController.reset = function(req, res, next){
     return res.render("users/reset", {resetKey: key, errors: ['password']});
   }
 
-  console.log("new date", new Date());
+  // console.log("new date", new Date());
   User
     .find({where: {resetKey: key, resetExpire: {
         gte: new Date().toISOString()
