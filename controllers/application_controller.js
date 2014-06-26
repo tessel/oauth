@@ -4,6 +4,7 @@ var db = require('../models/index')
     , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
     , GitHubStrategy = require('passport-github').Strategy
     , ssoUtil = require('../utils/sso')
+    , Sessions = require('./sessions_controller')
     ;
 
 var ApplicationController = {};
@@ -16,15 +17,13 @@ ApplicationController.auth = function(req, res, next){
     res.redirect('/login');
   }
 
-  // console.log("app auth", req.session.userId, req.isAuthenticated(), req.session.user, req.user);
-
   if (req.session.userId || req.isAuthenticated()){
     if (req.session.user ){
-      next();
+      Sessions.signIn(req, res, req.session.user, next);
     } else if (req.user) {
       req.session.userId = req.user.id;
       req.session.user = req.user;
-      next();
+      Sessions.signIn(req, res, req.session.user, next);
     }else{
       User
         .find({ where: { id: req.session.userId } })
@@ -32,7 +31,7 @@ ApplicationController.auth = function(req, res, next){
         .success(function(user) {
           if (user) {
             req.session.user = user;
-            next();
+            Sessions.signIn(req, res, req.session.user, next);
           }else {
             redirectToLogin();
           }
