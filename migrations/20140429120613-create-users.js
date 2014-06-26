@@ -46,7 +46,7 @@ module.exports = {
 
       accessToken: {
         type: DataTypes.STRING
-      }
+      },
 
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
