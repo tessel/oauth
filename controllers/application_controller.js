@@ -3,6 +3,7 @@ var db = require('../models/index')
     , passport = require('passport')
     , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
     , GitHubStrategy = require('passport-github').Strategy
+    , ssoUtil = require('../utils/sso')
     ;
 
 var ApplicationController = {};
@@ -141,6 +142,18 @@ ApplicationController.oauth = function(req, res){
 };
 
 ApplicationController.callbackAuth = function(req, res){
+  // check to make sure we're not redirecting to anything
+  if (req.session.redirect && req.session.sso_secret && req.session.nonce) {
+    var query = ssoUtil.cleanUser(req.session.nonce, req.session.user
+      , req.session.sso_secret)
+    console.log("redirect url", req.session.redirect);
+    req.session.redirect = null;
+    req.session.sso_secret = null;
+    req.session.nonce = null;
+
+    return res.redirect(req.session.redirect+query);
+  }
+
   res.redirect('/user');
 };
 
