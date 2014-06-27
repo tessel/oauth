@@ -1,5 +1,11 @@
 // first, load environment settings from .env file; if it exists
-require('dotenv').load();
+var dotenv = require('dotenv')
+  , path = require('path')
+  ; 
+
+dotenv._getKeysAndValuesFromEnvFilePath(path.join(__dirname, '.env'));
+dotenv._setEnvs();
+
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
 
 var path = require('path');

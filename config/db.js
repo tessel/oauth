@@ -1,4 +1,9 @@
-require('dotenv').load();
+var dotenv = require('dotenv')
+  , path = require('path')
+  ; 
+
+dotenv._getKeysAndValuesFromEnvFilePath(path.join(__dirname, '../', '.env'));
+dotenv._setEnvs();
 
 var host = process.env.DB_HOST || "127.0.0.1";
 
