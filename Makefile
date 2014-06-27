@@ -12,6 +12,9 @@ bdd:
 migrate:
 	@$(BIN)/sequelize --config ./config/db.js -m
 
+migrate-production:
+	@$(BIN)/sequelize --config ./config/db.js -m --env production
+
 migrate-rollback:
 	@$(BIN)/sequelize --config ./config/db.js -m -u
 
