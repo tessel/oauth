@@ -43,12 +43,16 @@ SessionsController.destroy = function(req, res, next) {
   req.session.user = null;
   req.session.sso_secret = null;
   req.session.nonce = null;
-  res.redirect('/login');
+  res.redirect('/');
 };
 
 SessionsController.signIn = function(req, res, user, next){
   req.session.userId = user.id;
   req.session.user = user;
+
+  if (req.session.tempUser) {
+    req.session.tempUser = null;
+  }
 
   if (req.session.redirect && req.session.sso_secret && req.session.nonce) {
     var query = ssoUtil.cleanUser(req.session.nonce, req.session.user
@@ -59,14 +63,14 @@ SessionsController.signIn = function(req, res, user, next){
     req.session.sso_secret = null;
     req.session.nonce = null;
 
-    res.redirect(redirect+query);
+    return res.redirect(redirect+query);
   } else if (req.session.originalUrl) {
     var redirectUrl = req.session.originalUrl;
 
     req.session.originalUrl = null;
     return res.redirect(redirectUrl);
   } else {
-    next();
+    next && next();
   }
 };
 

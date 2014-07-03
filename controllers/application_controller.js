@@ -70,24 +70,19 @@ passport.use(new GoogleStrategy({
         .success(function(user) {
           if (user) {
             return done(null, user);
-          }
-          else {
-            User
-              .create({
-                username: profile._json.email,
-                email: profile._json.email,
-                name: profile._json.name,
-                accessToken: accessToken
-              })
-              .success(function(userC) {
-                return done(null, userC);
-              })
-              .error(function(err) {
-                console.log("user creation error", err);
+          } else {
+            var tempUser = {
+              username: profile._json.email,
+              email: profile._json.email,
+              name: profile._json.name,
+              accessToken: accessToken,
+              needToCreate: true
+            }
 
-                return done(null, profile);
-              });
+            return done(null, tempUser);
+
           }
+
         })
         .error(function(err) {
           return done(null, profile);
@@ -111,22 +106,17 @@ passport.use(new GitHubStrategy({
         .success(function(user) {
           if (user) {
             return done(null, user);
-          }
-          else {
-            User
-              .create({
-                username: profile._json.login,
-                email: profile._json.email,
-                name: profile._json.name,
-                accessToken: accessToken
-              })
-              .success(function(userC) {
-                return done(null, userC);
-              })
-              .error(function(err) {
-                console.log("user creation error", err);
-                return done(null, profile);
-              });
+          } else {
+            var tempUser = {
+              username: profile._json.login,
+              email: profile._json.email,
+              name: profile._json.name,
+              accessToken: accessToken, 
+              needToCreate: true
+            }
+
+            return done(null, tempUser);
+
           }
         })
         .error(function(err) {
@@ -142,25 +132,15 @@ ApplicationController.oauth = function(req, res){
 
 ApplicationController.callbackAuth = function(req, res){
   
-  
-  // check to make sure we're not redirecting to anything
-  if (req.session.redirect && req.session.sso_secret 
-    && req.session.nonce && req.user ) {
-    req.session.user = req.user;
-    req.session.userId = req.user.id;
-
-    var query = ssoUtil.cleanUser(req.session.nonce, req.session.user
-      , req.session.sso_secret)
-    // console.log("redirect url", req.session.redirect);
-    var redirect = req.session.redirect;
-    req.session.redirect = null;
-    req.session.sso_secret = null;
-    req.session.nonce = null;
-
-    return res.redirect(redirect+query);
+  if (req.user && req.user.needToCreate) {
+    req.session.tempUser = req.user;
+    // if we need to create a user redirect to /new
+    return res.redirect('/users/new');
   }
 
-  res.redirect('/user');
+  Sessions.signIn(req, res, req.user, function(){
+    res.redirect('/user');
+  });
 };
 
 module.exports = ApplicationController;
