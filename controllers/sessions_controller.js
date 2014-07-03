@@ -43,6 +43,9 @@ SessionsController.destroy = function(req, res, next) {
   req.session.user = null;
   req.session.sso_secret = null;
   req.session.nonce = null;
+  if (req.user) {
+    req.logout();
+  }
   res.redirect('/');
 };
 
