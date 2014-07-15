@@ -71,8 +71,10 @@ passport.use(new GoogleStrategy({
           if (user) {
             return done(null, user);
           } else {
+
             var tempUser = {
-              username: profile._json.email,
+              // splice out @
+              username: profile._json.email.split('@')[0],
               email: profile._json.email,
               name: profile._json.name,
               accessToken: accessToken,
