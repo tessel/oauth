@@ -5,6 +5,7 @@ var db = require('../models/index')
     , GitHubStrategy = require('passport-github').Strategy
     , ssoUtil = require('../utils/sso')
     , Sessions = require('./sessions_controller')
+    , request = require('request')
     ;
 
 var ApplicationController = {};
@@ -100,7 +101,6 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
-    // console.log("github auth", accessToken, refreshToken, profile);
 
     process.nextTick(function () {
       User
@@ -109,16 +109,36 @@ passport.use(new GitHubStrategy({
           if (user) {
             return done(null, user);
           } else {
-            var tempUser = {
-              username: profile._json.login,
-              email: profile._json.email,
-              name: profile._json.name,
-              accessToken: accessToken, 
-              needToCreate: true
+            function createTmpUser(email){
+              var tempUser = {
+                username: profile._json.login,
+                email: email,
+                name: profile._json.name,
+                accessToken: accessToken, 
+                needToCreate: true
+              }
+
+              return done(null, tempUser);
             }
 
-            return done(null, tempUser);
-
+            // try to get /user/email
+            if (!profile._json.email) {
+              var options = {
+                url: 'https://api.github.com/user/emails?access_token='+accessToken,
+                headers: {'User-Agent': 'tessel-auth'}
+              }
+              request(options, function(e, r, body) {
+                if (e) {
+                  // something went wrong
+                  createTmpUser('');
+                } else {
+                  var res = JSON.parse(body);
+                  createTmpUser(res[0].email)
+                }
+              });
+            } else {
+              createTmpUser(profile._json.email);
+            }
           }
         })
         .error(function(err) {
