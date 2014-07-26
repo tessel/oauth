@@ -14,8 +14,11 @@ SessionsController.new = function(req, res, next) {
   var args = {};
   if (req.query.err) {
     args['loginErr'] = "The username/password did not match";
+  } else if (req.query.githubErr) {
+    args['failure'] = req.session.githubErr;
+    delete req.session.githubErr;
   }
-  res.render('login', args);
+  return res.render('login', args);
 };
 
 SessionsController.create = function(req, res, next) {
@@ -33,7 +36,7 @@ SessionsController.create = function(req, res, next) {
       if ((!user) || (!bcrypt.compareSync(password, user.passwordDigest))) {
         return res.redirect('/login/?err=login');
       }
-
+      
       SessionsController.signIn(req, res, user, next);
     });
 };

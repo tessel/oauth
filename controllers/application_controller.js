@@ -103,16 +103,49 @@ passport.use(new GitHubStrategy({
     // asynchronous verification, for effect...
 
     process.nextTick(function () {
-      User
-        .find({ where: { email: profile._json.email } })
-        .success(function(user) {
-          if (user) {
-            return done(null, user);
+      // get the user email
+      var userEmail = profile._json.email;
+      if (!userEmail) {
+        var options = {
+          url: 'https://api.github.com/user/emails?access_token='+accessToken,
+          headers: {'User-Agent': 'tessel-auth'}
+        }
+        request(options, function(e, r, body) {
+          if (!e) {
+            var res = JSON.parse(body);
+            // find the one associated as "primary";
+            res = res.filter(function(e){
+              return e.primary && e.verified;
+            })
+            if (res.length > 0) {
+              userEmail = res[0];
+              generateUser();
+            } else {
+              return failure("The primary email associated with this Github account is unverified. Please verify it on Github first.");
+            }
           } else {
-            function createTmpUser(email){
+            // error getting email
+            return failure("Could not get user email from Github.");
+          }
+        });
+      } else {
+        generateUser();
+      }
+
+      function failure(message){
+        return done(null, false, { message: message });
+      }
+
+      function generateUser() {
+        User
+          .find({ where: { email: userEmail } })
+          .success(function(user) {
+            if (user) {
+              return done(null, user);
+            } else {
               var tempUser = {
                 username: profile._json.login,
-                email: email,
+                email: userEmail,
                 name: profile._json.name,
                 accessToken: accessToken, 
                 needToCreate: true
@@ -120,30 +153,12 @@ passport.use(new GitHubStrategy({
 
               return done(null, tempUser);
             }
-
-            // try to get /user/email
-            if (!profile._json.email) {
-              var options = {
-                url: 'https://api.github.com/user/emails?access_token='+accessToken,
-                headers: {'User-Agent': 'tessel-auth'}
-              }
-              request(options, function(e, r, body) {
-                if (e) {
-                  // something went wrong
-                  createTmpUser('');
-                } else {
-                  var res = JSON.parse(body);
-                  createTmpUser(res[0].email)
-                }
-              });
-            } else {
-              createTmpUser(profile._json.email);
-            }
-          }
-        })
-        .error(function(err) {
-          return done(null, profile);
-        });
+          })
+          .error(function(err) {
+            return failure("We had an error checking for "+userEmail);
+          });
+      }
+      
     });
   }
 ));
