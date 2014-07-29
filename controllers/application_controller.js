@@ -118,7 +118,7 @@ passport.use(new GitHubStrategy({
               return e.primary && e.verified;
             })
             if (res.length > 0) {
-              userEmail = res[0];
+              userEmail = res[0].email;
               generateUser();
             } else {
               return failure("The primary email associated with this Github account is unverified. Please verify it on Github first.");
