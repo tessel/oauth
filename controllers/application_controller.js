@@ -14,7 +14,7 @@ ApplicationController.auth = function(req, res, next){
     req.session.originalUrl = req.originalUrl;
     req.session.user = null;
     req.session.userId = null;
-    res.redirect('/login');
+    res.redirect(301, '/login');
   }
 
   if (req.session.userId || req.isAuthenticated()){
