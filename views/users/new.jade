@@ -3,7 +3,7 @@ extends ../layout
 block content
   .row
     .large-12.columns
-      h2.subheader= title
+      h2.subheader Register new user
   .panel
     .row
       .large-12.columns
@@ -15,19 +15,20 @@ block content
           .row
             .large-12.columns
               label email
-                input(name='user[email]', type='email', placeholder='email', value=user.email)
+                input(name='user[email]', type='email', placeholder='email', value=user.email, disabled=(user.accessToken ? "disabled" : undefined))
           .row
             .large-12.columns
               label Name
                 input(name='user[name]', type='text', placeholder='name', value=user.name)
-          .row
-            .large-12.columns
-              label Password
-                input(name='user[password]', type='password', placeholder='password')
-          .row
-            .large-12.columns
-              label Confirm Password
-                input(name='user[passwordConfirmation]', type='password', placeholder='confirm password')
+          if !user.accessToken
+            .row
+              .large-12.columns
+                label Password
+                  input(name='user[password]', type='password', placeholder='password')
+            .row
+              .large-12.columns
+                label Confirm Password
+                  input(name='user[passwordConfirmation]', type='password', placeholder='confirm password')
           .row
             .large-12.columns
               button.radius(type='submit') Sign up

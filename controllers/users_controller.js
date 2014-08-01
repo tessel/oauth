@@ -17,9 +17,15 @@ usersApp.set('view engine', 'jade');
 var UsersController = {};
 
 UsersController.new = function(req, res, next){
+  var user = User.build(req.body.user);
+
+  // check to see if we have a session user from oauth
+  if (req.session.tempUser){
+    user = User.build(req.session.tempUser);
+  }
+
   res.render('users/new', {
-    title: 'Register new user',
-    user: User.build(req.body.user)
+    user: user
   });
 };
 
@@ -150,26 +156,42 @@ UsersController.resetPassword = function (req, res, next){
 
 UsersController.create = function(req, res, next){
   var newUser = req.body.user;
+  var errs = [];
+  var required = ['username', 'email', 'name', 'password', 'passwordConfirmation'];
 
   function renderErr(results){
     results.title = 'Register new user';
-    results.user = req.body.user;
+    results.user = newUser;
     res.render('users/new', results);
   }
 
-  var required = ['username', 'email', 'name', 'password', 'passwordConfirmation'];
-  var errs = [];
+  if (req.session.tempUser && req.session.tempUser.accessToken) {
+    // if there is, we don't need a password as long as we have an accessToken
+    newUser.email = req.session.tempUser.email;
+    newUser.accessToken = req.session.tempUser.accessToken;
+
+    required = ['username', 'email', 'name'];
+
+  } else if (req.session.tempUser && !req.session.tempUser.accessToken){
+    // we have a session user but it doesn't have an oauth token
+    return renderErr({failure: "Authentication through Oauth failed"});
+  }
+  
+  // if there's no session user, we didn't go through google/github oauth
   required.forEach(function(field){
     if (!newUser[field]) errs.push('user['+field+']');
   });
 
-  if (newUser.password.length < 8) {
-    return renderErr({failure: "Password needs to be at least 8 characters long."});
-  }
+  if (!req.session.tempUser){
+    // if we don't have a session user, make sure that the password fields are filled out
+    if (newUser.password.length < 8) {
+      return renderErr({failure: "Password needs to be at least 8 characters long."});
+    }
 
-  if (newUser.password != newUser.passwordConfirmation) {
-    return renderErr({failure: "Passwords don't match."});
-  } 
+    if (newUser.password != newUser.passwordConfirmation) {
+      return renderErr({failure: "Passwords don't match."});
+    } 
+  }
 
   if (errs.length > 0) {
     return renderErr({errors: errs});
@@ -182,17 +204,20 @@ UsersController.create = function(req, res, next){
     .success(function(user){
       if (user) {
         // email already exists in db
-        return renderErr({failure: "Email and username must be unique"});
+        return renderErr({failure: "Email or username already exists."});
+      } else {
+        User
+          .create(newUser)
+          .success(function(user) {
+            // redirect to portal/discourse if needed
+            sessions.signIn(req, res, user, function(){
+              res.redirect('/user');
+            });
+          })
+          .error(function(err) {
+            renderErr({failure: err});
+          });
       }
-
-       User
-        .create(newUser)
-        .success(function(user) {
-          sessions.signIn(req, res, user);
-        })
-        .error(function(err) {
-          renderErr({failure: err});
-        });
 
     })
     .error(function(err) {

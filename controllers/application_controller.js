@@ -5,6 +5,7 @@ var db = require('../models/index')
     , GitHubStrategy = require('passport-github').Strategy
     , ssoUtil = require('../utils/sso')
     , Sessions = require('./sessions_controller')
+    , request = require('request')
     ;
 
 var ApplicationController = {};
@@ -70,24 +71,21 @@ passport.use(new GoogleStrategy({
         .success(function(user) {
           if (user) {
             return done(null, user);
-          }
-          else {
-            User
-              .create({
-                username: profile._json.email,
-                email: profile._json.email,
-                name: profile._json.name,
-                accessToken: accessToken
-              })
-              .success(function(userC) {
-                return done(null, userC);
-              })
-              .error(function(err) {
-                console.log("user creation error", err);
+          } else {
 
-                return done(null, profile);
-              });
+            var tempUser = {
+              // splice out @
+              username: profile._json.email.split('@')[0],
+              email: profile._json.email,
+              name: profile._json.name,
+              accessToken: accessToken,
+              needToCreate: true
+            }
+
+            return done(null, tempUser);
+
           }
+
         })
         .error(function(err) {
           return done(null, profile);
@@ -103,35 +101,64 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
-    // console.log("github auth", accessToken, refreshToken, profile);
 
     process.nextTick(function () {
-      User
-        .find({ where: { email: profile._json.email } })
-        .success(function(user) {
-          if (user) {
-            return done(null, user);
+      // get the user email
+      var userEmail = profile._json.email;
+      if (!userEmail) {
+        var options = {
+          url: 'https://api.github.com/user/emails?access_token='+accessToken,
+          headers: {'User-Agent': 'tessel-auth'}
+        }
+        request(options, function(e, r, body) {
+          if (!e) {
+            var res = JSON.parse(body);
+            // find the one associated as "primary";
+            res = res.filter(function(e){
+              return e.primary && e.verified;
+            })
+            if (res.length > 0) {
+              userEmail = res[0].email;
+              generateUser();
+            } else {
+              return failure("The primary email associated with this Github account is unverified. Please verify it on Github first.");
+            }
+          } else {
+            // error getting email
+            return failure("Could not get user email from Github.");
           }
-          else {
-            User
-              .create({
-                username: profile._json.login,
-                email: profile._json.email,
-                name: profile._json.name,
-                accessToken: accessToken
-              })
-              .success(function(userC) {
-                return done(null, userC);
-              })
-              .error(function(err) {
-                console.log("user creation error", err);
-                return done(null, profile);
-              });
-          }
-        })
-        .error(function(err) {
-          return done(null, profile);
         });
+      } else {
+        generateUser();
+      }
+
+      function failure(message){
+        return done(null, false, { message: message });
+      }
+
+      function generateUser() {
+        User
+          .find({ where: { email: userEmail } })
+          .success(function(user) {
+            if (user) {
+              return done(null, user);
+            } else {
+              var tempUser = {
+                username: profile._json.login,
+                email: userEmail,
+                name: profile._json.name,
+                accessToken: accessToken, 
+                needToCreate: true
+              }
+
+              return done(null, tempUser);
+            }
+          })
+          .error(function(err) {
+            return failure("We had an error checking for "+userEmail);
+          });
+      }
+      
     });
   }
 ));
@@ -142,25 +169,15 @@ ApplicationController.oauth = function(req, res){
 
 ApplicationController.callbackAuth = function(req, res){
   
-  
-  // check to make sure we're not redirecting to anything
-  if (req.session.redirect && req.session.sso_secret 
-    && req.session.nonce && req.user ) {
-    req.session.user = req.user;
-    req.session.userId = req.user.id;
-
-    var query = ssoUtil.cleanUser(req.session.nonce, req.session.user
-      , req.session.sso_secret)
-    // console.log("redirect url", req.session.redirect);
-    var redirect = req.session.redirect;
-    req.session.redirect = null;
-    req.session.sso_secret = null;
-    req.session.nonce = null;
-
-    return res.redirect(redirect+query);
+  if (req.user && req.user.needToCreate) {
+    req.session.tempUser = req.user;
+    // if we need to create a user redirect to /new
+    return res.redirect('/users/new');
   }
 
-  res.redirect('/user');
+  Sessions.signIn(req, res, req.user, function(){
+    res.redirect('/user');
+  });
 };
 
 module.exports = ApplicationController;

@@ -37,8 +37,17 @@ module.exports = function(oauth) {
   router.get('/users/genApiKey', App.auth, Users.genApiKey);
 
   // Github Auth Routes
-  router.get('/auth/github', passport.authenticate('github'), App.oauth);
-  router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), App.callbackAuth)
+  router.get('/auth/github', passport.authenticate('github', {scope: 'user:email'}), App.oauth);
+  router.get('/auth/github/callback', function(req, res, next) {
+    passport.authenticate('github', function(err, user, info) {
+      if (!user) {
+        req.session.githubErr = info.message;
+        return res.redirect('/login?githubErr=true')
+      }
+      req.user = user;
+      next();
+    })(req, res, next);
+  }, App.callbackAuth);
 
   // Google Auth Routes
   router.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
