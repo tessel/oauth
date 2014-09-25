@@ -70,3 +70,7 @@ This is all the configuration you need to do to run the app, you should
 now be able to go to `http://127.0.0.1:3002/register` to create a new
 user, after you create a new user you can request the user profile using
 the `/users/profile` path and passing along the client apps creds.
+
+### License
+
+MIT or Apache 2.0, at your option.
