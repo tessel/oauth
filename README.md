@@ -38,9 +38,9 @@ config in the app.
    
    You may need to add an additional setting for the (development) target database name, e.g. with the default OS X `brew install postgres`:
    
-   > DB_USERNAME=username_of_whoever_installed_postgres
-   > DB_PASSWORD=
-   > DB_DEVELOPMENT=postgres
+   > DB_USERNAME=username_of_whoever_installed_postgres  
+   > DB_PASSWORD=  
+   > DB_DEVELOPMENT=postgres  
    
 
 3. If everything was successfully installed and configured you should
