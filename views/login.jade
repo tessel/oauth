@@ -16,15 +16,15 @@ block content
             i.fa.fa-github
             | &nbsp; Login with Github
       .row
-        .large-6.columns.end
-          label Username or Email
-            input(name='username', type='text', placeholder='username')
+        .large-6.columns.end(class="#{loginErr ? 'error' : ''}")
+          label(for="username") Username or Email
+          input.error(name='username', type='text', placeholder='username' id='username')
           if loginErr
             small.error #{loginErr}
       .row
-        .large-6.columns.end
-          label Password
-            input(name='password', type='password', placeholder='password')
+        .large-6.columns.end(class="#{loginErr ? 'error' : ''}")
+          label(for="username") Password
+            input(name='password', type='password', placeholder='password' id='username')
           if loginErr
             small.error #{loginErr}
       .row
