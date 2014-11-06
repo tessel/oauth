@@ -1,11 +1,27 @@
 # Tessel OAuth2 server: setup and config.
+
+## Prerequisites
+
+You'll need node.js/npm, PostgreSQL, and Redis installed.
+
+On Mac OS X this is best done via [homebrew](http://brew.sh/):
+
+> brew install node postgresql redis
+
+…and it should also output instructions for starting up the respective daemons via launchd or manually (e.g. `postgres -D /usr/local/var/postgres` and `redis-server /usr/local/etc/redis.conf`).
+
+After checking out this repo, you'll also need to fetch its dependencies with:
+
+> npm install
+
+
 ## DB setup
 
-First step is to setup the DB server, create a new DB and setup the db
+Next step is to setup the DB server, create a new DB and setup the db
 config in the app.
 
 1. We are using PostgreSQL, make sure to install it and create a
-   user with full access to the DB the app will be using.
+   user with full access to the DB the app will be using. (On OS X, the default brew install provides such a user, see sample settings in next step.)
 
 2. Next we need to create the DB oauth_development (or staging,
    production, etc..), and setup the correct connection parameters, you
@@ -19,6 +35,13 @@ config in the app.
    ```
    $ cp .env.example .env
    ```
+   
+   You may need to add an additional setting for the (development) target database name, e.g. with the default OS X `brew install postgres`:
+   
+   > DB_USERNAME=username_of_whoever_installed_postgres  
+   > DB_PASSWORD=  
+   > DB_DEVELOPMENT=postgres  
+   
 
 3. If everything was successfully installed and configured you should
    now be able to run migrations to create the DB tables and update them
