@@ -23,8 +23,8 @@ block content
             small.error #{loginErr}
       .row
         .large-6.columns.end(class="#{loginErr ? 'error' : ''}")
-          label(for="username") Password
-            input(name='password', type='password', placeholder='password' id='username')
+          label(for="password") Password
+            input(name='password', type='password', placeholder='password' id='password')
           if loginErr
             small.error #{loginErr}
       .row
