@@ -240,6 +240,7 @@ UsersController.profile = function(req, res, next){
       res.send({
         username: user.username,
         email: user.email,
+        proxyToken: user.proxyToken,
         apiKey: user.apiKey,
         name: user.name
       });
@@ -257,15 +258,70 @@ UsersController.show = function(req, res, next){
       user = req.session.user;
 
   if (user){
-    res.render('users/show', {
-      title: 'User Profile',
-      user: user,
-      errors: errors
-    });
+    if (!user.proxyToken){
+      User
+      .find({ where: Sequelize.or({email: user.email }
+        , {username: user.username}) })
+        .success(function(user){
+          user.genProxyToken();
+          user.save().success(function(){
+            res.render('users/show', {
+              title: 'User Profile',
+              user: user,
+              errors: errors
+            });
+          }).error(function(){
+            errors.push({message: 'An error occured while generating a proxy token.'});
+            res.render('users/show', {
+              title: 'User Profile',
+              user: user,
+              errors: errors
+            });
+          });
+        });
+    } else {
+      res.render('users/show', {
+        title: 'User Profile',
+        user: user,
+        errors: errors
+      });
+    }
   }else{
     return res.redirect('/login');
   }
 };
+
+UsersController.genProxyToken = function(req, res, next) {
+  var errors = [];
+  
+  User
+  .find({ where: { id: req.session.user.id } })
+  .success(function(user) {
+    if (user){
+      user
+      .genProxyToken()
+      .save()
+      .success(function() {
+        req.session.user = user;
+        res.redirect('/user');
+      })
+      .error(function() {
+        errors.push({ message: 'An error occured while updating user profile.' });
+        res.render('users/show', {
+          title: 'User Profile',
+          user: user,
+          errors: errors
+        });
+      });
+    }else{
+      return res.redirect('/login');
+    }
+  })
+  
+  .error(function(err) {
+    return res.redirect('/login');
+  });
+}
 
 UsersController.genApiKey = function(req, res, next) {
   var errors = [];

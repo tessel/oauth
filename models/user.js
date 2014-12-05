@@ -1,4 +1,5 @@
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt')
+  , crypto = require('crypto');
 
 var CLOUD_URI = process.env.CLOUD_URI;
 
@@ -10,6 +11,7 @@ var User = function(sequelize, DataTypes){
     name: { type: DataTypes.STRING },
     passwordDigest: { type: DataTypes.STRING, allowNull: false },
     apiKey: { type: DataTypes.STRING, unique: true, allowNull: true },
+    proxyToken: { type: DataTypes.STRING, unique: true, allowNull: true},
     resetKey: { type: DataTypes.STRING, unique: true, allowNull: true, defaultValue: null},
     resetExpire: {type: DataTypes.DATE},
     accessToken: { type: DataTypes.STRING, unique: true }
@@ -50,6 +52,7 @@ var User = function(sequelize, DataTypes){
       },
 
       beforeCreate: function(user, next){
+        user.genProxyToken(null, user);
         user.genApiKey(null, user);
         next(null, user);
       }
@@ -67,6 +70,14 @@ var User = function(sequelize, DataTypes){
           this.passwordDigest = bcrypt.hashSync(this.accessToken, salt);          
         }
 
+        return this;
+      },
+
+      genProxyToken: function(){
+        var token = crypto.randomBytes(15).toString('base64');
+        
+        this.proxyToken = token;
+        
         return this;
       },
 
