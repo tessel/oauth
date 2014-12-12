@@ -10,6 +10,10 @@ var App = require('./controllers/application_controller')
     ;
 
 module.exports = function(oauth) {
+  // Proxy server API routes
+  router.all('/proxy', App.proxyServerAuth);
+  router.get('/proxy/verify', Users.verifyProxyKey);
+  
   // OAuth routes
   router.all('/oauth/token', oauth.grant());
   router.post('/oauth/authorise', App.auth, oauth.authCodeGrant(OAuth.createAuth));

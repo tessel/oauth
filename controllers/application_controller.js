@@ -180,4 +180,13 @@ ApplicationController.callbackAuth = function(req, res){
   });
 };
 
+ApplicationController.proxyServerAuth = function(req, res, next){
+  
+  if (process.env.PROXY_SECRET && req.query.proxySecret == process.env.PROXY_SECRET) {
+    next && next();
+  } else {
+    return res.status(401).json({error: 'Authentication Error: Incorrect Secret'});
+  }
+}
+
 module.exports = ApplicationController;

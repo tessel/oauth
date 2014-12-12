@@ -240,7 +240,7 @@ UsersController.profile = function(req, res, next){
       res.send({
         username: user.username,
         email: user.email,
-        proxyToken: user.proxyToken,
+        proxyKey: user.proxyKey,
         apiKey: user.apiKey,
         name: user.name
       });
@@ -258,12 +258,12 @@ UsersController.show = function(req, res, next){
       user = req.session.user;
 
   if (user){
-    if (!user.proxyToken){
+    if (!user.proxyKey){
       User
       .find({ where: Sequelize.or({email: user.email }
         , {username: user.username}) })
         .success(function(user){
-          user.genProxyToken();
+          user.genProxyKey();
           user.save().success(function(){
             res.render('users/show', {
               title: 'User Profile',
@@ -291,7 +291,7 @@ UsersController.show = function(req, res, next){
   }
 };
 
-UsersController.genProxyToken = function(req, res, next) {
+UsersController.genProxyKey = function(req, res, next) {
   var errors = [];
   
   User
@@ -299,7 +299,7 @@ UsersController.genProxyToken = function(req, res, next) {
   .success(function(user) {
     if (user){
       user
-      .genProxyToken()
+      .genProxyKey()
       .save()
       .success(function() {
         req.session.user = user;
@@ -355,5 +355,27 @@ UsersController.genApiKey = function(req, res, next) {
       return res.redirect('/login');
     });
 };
+
+// Proxy Server API
+UsersController.verifyProxyKey = function(req, res) {
+  
+  if (req.query.proxyKey){
+    User
+    .find({ where: { proxyKey: req.query.proxyKey } })
+    .success(function(user) {
+      console.log(user);
+      if (user){
+        res.json({error: null});
+      } else {
+        res.json({error: 'User not found'});
+      }
+    })
+    .error(function(err) {
+      res.json({error: 'Invalid key'}); // negative verification w/error
+    });
+  } else {
+    res.json({error: 'Invalid key'});
+  }
+}
 
 module.exports = UsersController;
