@@ -2,7 +2,7 @@ module.exports = {
   up: function(migration, DataTypes, done) {
     migration.addColumn(
       'Users', 
-      'proxyToken', 
+      'proxyKey', 
       {
         type: DataTypes.STRING,
         allowNull: true,
@@ -11,7 +11,7 @@ module.exports = {
     done()
   },
   down: function(migration, DataTypes, done) {
-    migration.removeColumn('Users', 'proxyToken')
+    migration.removeColumn('Users', 'proxyKey')
     done()
   }
 }

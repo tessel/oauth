@@ -11,7 +11,7 @@ var User = function(sequelize, DataTypes){
     name: { type: DataTypes.STRING },
     passwordDigest: { type: DataTypes.STRING, allowNull: false },
     apiKey: { type: DataTypes.STRING, unique: true, allowNull: true },
-    proxyToken: { type: DataTypes.STRING, unique: true, allowNull: true},
+    proxyKey: { type: DataTypes.STRING, unique: true, allowNull: true},
     resetKey: { type: DataTypes.STRING, unique: true, allowNull: true, defaultValue: null},
     resetExpire: {type: DataTypes.DATE},
     accessToken: { type: DataTypes.STRING, unique: true }
@@ -52,7 +52,7 @@ var User = function(sequelize, DataTypes){
       },
 
       beforeCreate: function(user, next){
-        user.genProxyToken(null, user);
+        user.genProxyKey(null, user);
         user.genApiKey(null, user);
         next(null, user);
       }
@@ -73,10 +73,10 @@ var User = function(sequelize, DataTypes){
         return this;
       },
 
-      genProxyToken: function(){
+      genProxyKey: function(){
         var token = crypto.randomBytes(15).toString('base64');
         
-        this.proxyToken = token;
+        this.proxyKey = token;
         
         return this;
       },
