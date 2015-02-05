@@ -20,7 +20,7 @@ var express = require('express')
     , passport = require('passport')
     ;
 
-var oauthserver = require('node-oauth2-server');
+var oauthserver = require('oauth2-server');
 
 var routes = require('./routes');
 
