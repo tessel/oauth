@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "express": "4.0.0",
-    "node-oauth2-server": "2.1.0",
     "static-favicon": "1.0.0",
     "morgan": "1.0.0",
     "cookie-parser": "1.0.1",
@@ -34,6 +33,7 @@
     "passport": "~0.2.0",
     "passport-google-oauth": "~0.1.5",
     "discourse-sso": "~1.0.1",
-    "request": "~2.39.0"
+    "request": "~2.39.0",
+    "oauth2-server": "~2.3.0"
   }
 }
