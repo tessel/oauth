@@ -181,7 +181,12 @@ model.extendedGrant = function(grantType, req, callback) {
     var params = req.body;
   }
 
-  this.grantTypeAllowed(params.client_id, params.grant_type, function(err, allowed) {
+  var client_id = req.oauth.client.clientId;
+  if ('client_id' in params && params.client_id !== client_id) {
+    // if this (deprecated) param is provided, it must be valid!
+    return callback(null, false, null);
+  }
+  this.grantTypeAllowed(client_id, params.grant_type, function(err, allowed) {
     db.User
       .find({ where: { apiKey: params.api_key } })
       .success(function(user) {
