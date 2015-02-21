@@ -34,6 +34,6 @@
     "passport-google-oauth": "~0.1.5",
     "discourse-sso": "~1.0.1",
     "request": "~2.39.0",
-    "oauth2-server": "~2.3.0"
+    "oauth2-server": "git://github.com/thomseddon/node-oauth2-server.git#9c4e9b1a"
   }
 }
